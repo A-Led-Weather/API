@@ -1,6 +1,6 @@
 <?php
 
-require "./dbConnection.php";
+require "dbConnection.php";
 require "Classes/AuthenticationApiRequests.php";
 require "Classes/ReportsApiRequests.php";
 require "Classes/HttpHandlerUtilities.php";
