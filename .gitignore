@@ -1,1 +1,3 @@
-./dbConnection.php
+dbConnection.php
+.idea
+.DS_STORE
