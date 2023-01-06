@@ -1,5 +1,10 @@
 <?php
 
+require "dbConnection.php";
+require "Classes/AuthenticationApiRequests.php";
+require "Classes/ReportsApiRequests.php";
+require "Classes/HttpHandlerUtilities.php";
+
 $request_method = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 

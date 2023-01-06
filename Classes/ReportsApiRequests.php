@@ -1,4 +1,5 @@
 <?php
+
 Class ReportsApiRequests {
 
     private object $pdo;
