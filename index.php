@@ -7,6 +7,7 @@ require "Classes/ReportsApiRequests.php";
 require "Classes/HttpHandlerUtilities.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 $dbDriver = $_ENV['DB_CONNECTION'];
 $dbHost = $_ENV['DB_HOST'];
