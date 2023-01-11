@@ -8,6 +8,7 @@ Class ReportsApiRequests {
     {
         $this->pdo = $pdo;
     }
+
     public function addReport(): void
     {
 
@@ -44,11 +45,11 @@ Class ReportsApiRequests {
     public function getReport(string $id): void
     {
             // Préparation de la requête de sélection
-            $query = $this->pdo->prepare('SELECT * FROM reports WHERE (id = :id)');
+            $query = $this->pdo->prepare('SELECT * FROM reports WHERE (reportId = :reportId)');
 
             // Exécution de la requête
             try {
-                $query->execute(['id' => $id]);
+                $query->execute(['reportId' => $id]);
                 // Récupération des résultats de la requête sous forme de tableau associatif
                 $results = $query->fetchAll(PDO::FETCH_ASSOC);
                 // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
@@ -65,7 +66,7 @@ Class ReportsApiRequests {
     {
 
         // Préparation de la requête de sélection
-        $query = $this->pdo->prepare('SELECT * FROM reports LIMIT 10');
+        $query = $this->pdo->prepare('SELECT * FROM reports ORDER BY reportId DESC LIMIT 10;');
 
         // Exécution de la requête
         try {
@@ -113,11 +114,11 @@ Class ReportsApiRequests {
             $humidity = $_PUT['humidity'];
 
             // Mise à jour du relevé de température et d'humidité dans la base de données
-            $query = $this->pdo->prepare('UPDATE reports SET temperature = :temperature, humidity = :humidity WHERE id = :id');
+            $query = $this->pdo->prepare('UPDATE reports SET temperature = :temperature, humidity = :humidity WHERE reportId = :reportId');
 
             try {
 
-                $query->execute(['temperature' => $temperature, 'humidity' => $humidity, 'id' => $id]);
+                $query->execute(['temperature' => $temperature, 'humidity' => $humidity, 'reportId' => $id]);
 
                 // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
                 HttpHandlerUtilities::setHTTPResponse(200, True);
@@ -138,11 +139,11 @@ Class ReportsApiRequests {
     {
 
             // Suppression du relevé de température et d'humidité de la base de données
-            $query = $this->pdo->prepare('DELETE FROM reports WHERE id = :id');
+            $query = $this->pdo->prepare('DELETE FROM reports WHERE reportId= :reportId');
 
             try {
 
-                $query->execute(['id' => $id]);
+                $query->execute(['reportId' => $id]);
                 // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
                 HttpHandlerUtilities::setHTTPResponse(200, True);
 
