@@ -1,3 +1,8 @@
-dbConnection.php
 .idea
 .DS_STORE
+/vendor/
+composer
+composer.json
+composer.lock
+.env
+/swagger
