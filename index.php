@@ -1,14 +1,23 @@
 <?php
 
+require "vendor/autoload.php";
 require "dbConnection.php";
 require "Classes/AuthenticationApiRequests.php";
 require "Classes/ReportsApiRequests.php";
 require "Classes/HttpHandlerUtilities.php";
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+
+$dbDriver = $_ENV['DB_CONNECTION'];
+$dbHost = $_ENV['DB_HOST'];
+$dbName = $_ENV['DB_NAME'];
+$dbUser = $_ENV['DB_USER'];
+$dbPassword = $_ENV['DB_PASSWORD'];
+
 $request_method = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
-$pdo = dbConnection();
+$pdo = dbConnection($dbDriver, $dbHost, $dbName, $dbUser, $dbPassword);
 
 $weatherReportsRequest = new ReportsApiRequests($pdo);
 $authenticationRequest = new AuthenticationApiRequests($pdo);
@@ -58,7 +67,7 @@ switch ($route_base) {
     default:
         // Route invalide
         header("HTTP/1.0 404 Not Found");
-        HttpHandlerUtilities::setHTTPResponse(405, false);
+        HttpHandlerUtilities::setHTTPResponse(404, false);
         break;
 
 }
