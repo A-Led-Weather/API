@@ -8,6 +8,102 @@ class AuthenticationApiRequests
     {
         $this->pdo = $pdo;
     }
+
+    public function createToken(): string
+    {
+        $tokenBytes = random_bytes(16);
+        return bin2hex($tokenBytes);
+    }
+
+    public function addToken(string $token, string $table, string $id, string $password) {
+
+        $idValues = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($idValues['id']) && isset($idValues['password'])) {
+
+            $query = $this->pdo->prepare('SELECT * FROM ' . $table . ' WHERE (id = :id');
+
+            // Exécution de la requête
+            try {
+                $query->execute(['id' => $id]);
+                // Récupération des résultats de la requête sous forme de tableau associatif
+                $results = $query->fetchAll(PDO::FETCH_ASSOC);
+                // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+
+                HttpHandlerUtilities::setHTTPResponse(200, True);
+                return true;
+
+            } catch (PDOException $e) {
+                HttpHandlerUtilities::setHTTPResponse(401, 'Unauthorized');
+                return false;
+            }
+
+            if ($idValues['password'] == "High9405") {
+
+                $uuid = uniqid();
+
+                $tokenBytes = random_bytes(16);
+                $token = bin2hex($tokenBytes);
+
+                // Préparation de la requête d'insertion
+                $query = $this->pdo->prepare('INSERT INTO machines (token, uuid) VALUES (:token, :uuid)');
+
+                // Liaison des paramètres
+                $query->bindParam(':token', $token);
+                $query->bindParam(':uuid', $uuid);
+
+                // Exécution de la requête
+                try {
+                    $query->execute();
+                    // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+                    HttpHandlerUtilities::setHTTPResponse(200, True);
+                } catch (PDOException $e) {
+                    // Si la requête échoue, on renvoie un code d'erreur (500)
+                    HttpHandlerUtilities::setHTTPResponse(500, False);
+                }
+            } else {
+                HttpHandlerUtilities::setHTTPResponse(401, 'Unauthorized');
+            }
+        } else {
+            // Si les données sont incomplètes, on renvoie un code d'erreur (400)
+            HttpHandlerUtilities::setHTTPResponse(400, False);
+        }
+
+    }
+
+    public function compareToken($table): bool
+    {
+
+        $idValues = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($_GET['token'])) {
+
+            $token = $_GET['token'];
+
+            // Préparation de la requête de sélection
+            $query = $this->pdo->prepare('SELECT * FROM ' . $table . ' WHERE (token = :token');
+
+            // Exécution de la requête
+            try {
+                $query->execute(['token' => $token]);
+                // Récupération des résultats de la requête sous forme de tableau associatif
+                $results = $query->fetchAll(PDO::FETCH_ASSOC);
+                // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+
+                HttpHandlerUtilities::setHTTPResponse(200, True);
+                return true;
+
+            } catch (PDOException $e) {
+                HttpHandlerUtilities::setHTTPResponse(401, 'Unauthorized');
+                return false;
+            }
+        } else {
+            // Si les données sont incomplètes, on renvoie un code d'erreur (404)
+            HttpHandlerUtilities::setHTTPResponse(404, False);
+            return false;
+        }
+    }
+
     public function addMachine(): void
     {
 
@@ -79,8 +175,8 @@ class AuthenticationApiRequests
                 return false;
             }
         } else {
-            // Si les données sont incomplètes, on renvoie un code d'erreur (400)
-            HttpHandlerUtilities::setHTTPResponse(400, False);
+            // Si les données sont incomplètes, on renvoie un code d'erreur (404)
+            HttpHandlerUtilities::setHTTPResponse(404, False);
             return false;
         }
     }
