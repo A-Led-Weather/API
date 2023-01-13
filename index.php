@@ -2,9 +2,9 @@
 
 require "vendor/autoload.php";
 require "dbConnection.php";
-require "Classes/AuthenticationApiRequests.php";
-require "Classes/ReportsApiRequests.php";
-require "Classes/HttpHandlerUtilities.php";
+require "classes/AuthenticationApiRequests.php";
+require "classes/ReportsApiRequests.php";
+require "classes/HttpHandlerUtilities.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
