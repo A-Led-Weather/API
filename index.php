@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 require "vendor/autoload.php";
 require "dbConnection.php";
 require "classes/AuthenticationApiRequests.php";
@@ -20,50 +22,14 @@ $route = $_SERVER["REQUEST_URI"];
 
 $pdo = dbConnection($dbDriver, $dbHost, $dbName, $dbUser, $dbPassword);
 
-$weatherReportsRequest = new ReportsApiRequests($pdo);
-$authenticationRequest = new AuthenticationApiRequests($pdo);
+$reportsRequests = new ReportsApiRequests($pdo);
 
-$routeExplode = explode('/', $route);
+$routeInfoArray = HttpHandlerUtilities::fetchRouteAndPathParameters($route);
 
-if (count($routeExplode) == 3) {
-    if ($routeExplode[1] == 'reports') {
-        preg_match('/^(\/\w+)\/(\d+)$/', $route, $matches);
-        $route_base = $matches[1];
-        $id = $matches[2];
-    }
-} elseif (count($routeExplode) == 2) {
-    if ($routeExplode[1] == 'reports') {
-        $route_base = $route;
-    }
-} else {
-    // Route invalide
-    header("HTTP/1.0 404 Not Found");
-    HttpHandlerUtilities::setHTTPResponse(404, false);
-    exit();
-}
+switch ($routeInfoArray['route_base']) {
 
-
-switch ($route_base) {
-
-    case '/reports':
-        switch ($request_method) {
-            case "GET":
-                $weatherReportsRequest->getLastsReports();
-                break;
-            case "POST":
-                $weatherReportsRequest->addReport();
-                break;
-            case 'PUT':
-                $weatherReportsRequest->updateReport($id);
-                break;
-            case 'DELETE':
-                $weatherReportsRequest->deleteReport($id);
-                break;
-            default:
-                header("HTTP/1.0 405 Method Not Allowed");
-                HttpHandlerUtilities::setHTTPResponse(405, false);
-                break;
-        }
+    case 'reports':
+        $reportsRequests->routeSwitcher($request_method, $routeInfoArray);
         break;
     default:
         // Route invalide
