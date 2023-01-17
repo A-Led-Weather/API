@@ -24,7 +24,7 @@ $pdo = dbConnection($dbDriver, $dbHost, $dbName, $dbUser, $dbPassword);
 
 $reportsRequests = new ReportsApiRequests($pdo);
 
-$routeInfoArray = HttpHandlerUtilities::fetchRouteAndPathParameters($route);
+$routeInfoArray = HttpHandlerUtilities::fetchRoutePathParameters($route);
 
 switch ($routeInfoArray['route_base']) {
 

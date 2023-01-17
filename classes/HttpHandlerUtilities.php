@@ -2,7 +2,7 @@
 
 abstract class HttpHandlerUtilities
 {
-    public static function fetchRouteAndPathParameters(string $route): array
+    public static function fetchRoutePathParameters(string $route): array
     {
 
         $routeExplode = explode('/', $route);
