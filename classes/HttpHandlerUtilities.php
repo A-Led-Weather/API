@@ -2,18 +2,12 @@
 
 abstract class HttpHandlerUtilities
 {
-    public static function setHTTPResponse(int $httpCode, bool $state): void
+    public static function fetchRouteAndPathParameters(string $route): array
     {
-        http_response_code($httpCode);
-        header('Content-Type: application/json');
-        echo json_encode(['Success' => $state]);
-    }
-
-    public static function fetchRouteAndPathParameters(string $route): array {
 
         $routeExplode = explode('/', $route);
 
-        if (!in_array($routeExplode[1] ,["reports", "devices", "locations", "users"])) {
+        if (!in_array($routeExplode[1], ["reports", "devices", "locations", "users"])) {
             // Route invalide
             header("HTTP/1.0 404 Not Found");
             self::setHTTPResponse(404, false);
@@ -41,5 +35,12 @@ abstract class HttpHandlerUtilities
         }
 
         return $routeArray;
+    }
+
+    public static function setHTTPResponse(int $httpCode, bool $state): void
+    {
+        http_response_code($httpCode);
+        header('Content-Type: application/json');
+        echo json_encode(['Success' => $state]);
     }
 }

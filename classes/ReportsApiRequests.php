@@ -10,6 +10,108 @@ class ReportsApiRequests
         $this->pdo = $pdo;
     }
 
+    public function routeSwitcher(string $request_method, array $routeInfoArray): void
+    {
+        switch ($request_method) {
+            case "GET":
+                if (isset($routeInfoArray['id'])) {
+                    $this->getReport($routeInfoArray['id']);
+                } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
+                    $this->getLastReportByLocation($routeInfoArray['location']);
+                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
+                    $this->getLastHourReportsByLocation($routeInfoArray['location']);
+                } else {
+                    $this->getLastsReports();
+                }
+                break;
+            case "POST":
+                $this->addReport();
+                break;
+            case 'PUT':
+                $this->updateReport($routeInfoArray['id']);
+                break;
+            case 'DELETE':
+                $this->deleteReport($routeInfoArray['id']);
+                break;
+            default:
+                header("HTTP/1.0 405 Method Not Allowed");
+                HttpHandlerUtilities::setHTTPResponse(405, false);
+                break;
+        }
+    }
+
+    public function getReport(string $id): void
+    {
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE (reportId = :reportId)');
+
+        try {
+            $query->execute(['reportId' => $id]);
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            http_response_code(200);
+            echo json_encode($results);
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+    }
+
+    public function getLastReportByLocation(string $location): void
+    {
+
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 1;');
+
+        try {
+            $query->execute(['locationName' => ucfirst($location)]);
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                HttpHandlerUtilities::setHTTPResponse(404, False);
+                exit();
+            }
+            http_response_code(200);
+            echo json_encode($results);
+
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+
+    }
+
+    public function getLastHourReportsByLocation(string $location): void
+    {
+
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 120;');
+
+        try {
+            $query->execute(['locationName' => ucfirst($location)]);
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                HttpHandlerUtilities::setHTTPResponse(404, False);
+                exit();
+            }
+            http_response_code(200);
+            echo json_encode($results);
+
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+
+
+    }
+
+    public function getLastsReports(): void
+    {
+
+        $query = $this->pdo->prepare('SELECT * FROM REPORT ORDER BY reportId DESC LIMIT 10;');
+
+        try {
+            $query->execute();
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            http_response_code(200);
+            echo json_encode($results);
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+    }
+
     public function addReport(): void
     {
 
@@ -36,78 +138,6 @@ class ReportsApiRequests
             }
         } else {
             HttpHandlerUtilities::setHTTPResponse(401, False);
-        }
-
-    }
-
-    public function getReport(string $id): void
-    {
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE (reportId = :reportId)');
-
-        try {
-            $query->execute(['reportId' => $id]);
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            http_response_code(200);
-            echo json_encode($results);
-        } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
-        }
-    }
-
-    public function getLastsReports(): void
-    {
-
-        $query = $this->pdo->prepare('SELECT * FROM REPORT ORDER BY reportId DESC LIMIT 10;');
-
-        try {
-            $query->execute();
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            http_response_code(200);
-            echo json_encode($results);
-        } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
-        }
-    }
-
-    public function getLastHourReportsByLocation(string $location): void
-    {
-
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 120;');
-
-        try {
-            $query->execute(['locationName' => ucfirst($location)]);
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            if (empty($results)) {
-                HttpHandlerUtilities::setHTTPResponse(404, False);
-                exit();
-            }
-            http_response_code(200);
-            echo json_encode($results);
-
-        } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
-        }
-
-
-    }
-
-    public function getLastReportByLocation(string $location): void
-    {
-
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 1;');
-
-        try {
-            $query->execute(['locationName' => ucfirst($location)]);
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            if (empty($results)) {
-                HttpHandlerUtilities::setHTTPResponse(404, False);
-                exit();
-            }
-            http_response_code(200);
-            echo json_encode($results);
-
-        } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
         }
 
     }
@@ -151,36 +181,6 @@ class ReportsApiRequests
 
         } catch (PDOException $e) {
             HttpHandlerUtilities::setHTTPResponse(500, False);
-        }
-    }
-
-    public function routeSwitcher(string $request_method, array $routeInfoArray) : void
-    {
-        switch ($request_method) {
-            case "GET":
-                if (isset($routeInfoArray['id'])) {
-                    $this->getReport($routeInfoArray['id']);
-                } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
-                    $this->getLastReportByLocation($routeInfoArray['location']);
-                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
-                    $this->getLastHourReportsByLocation($routeInfoArray['location']);
-                } else {
-                    $this->getLastsReports();
-                }
-                break;
-            case "POST":
-                $this->addReport();
-                break;
-            case 'PUT':
-                $this->updateReport($routeInfoArray['id']);
-                break;
-            case 'DELETE':
-                $this->deleteReport($routeInfoArray['id']);
-                break;
-            default:
-                header("HTTP/1.0 405 Method Not Allowed");
-                HttpHandlerUtilities::setHTTPResponse(405, false);
-                break;
         }
     }
 
