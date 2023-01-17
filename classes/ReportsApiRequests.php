@@ -1,6 +1,7 @@
 <?php
 
-Class ReportsApiRequests {
+class ReportsApiRequests
+{
 
     private object $pdo;
 
@@ -48,22 +49,22 @@ Class ReportsApiRequests {
 
     public function getReport(string $id): void
     {
-            // Préparation de la requête de sélection
-            $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE (reportId = :reportId)');
+        // Préparation de la requête de sélection
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE (reportId = :reportId)');
 
-            // Exécution de la requête
-            try {
-                $query->execute(['reportId' => $id]);
-                // Récupération des résultats de la requête sous forme de tableau associatif
-                $results = $query->fetchAll(PDO::FETCH_ASSOC);
-                // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
-                http_response_code(200);
-                // Encodage des résultats en JSON et renvoi de la réponse
-                echo json_encode($results);
-            } catch (PDOException $e) {
-                // Si la requête échoue, on renvoie un code d'erreur (500)
-                HttpHandlerUtilities::setHTTPResponse(500, False);
-            }
+        // Exécution de la requête
+        try {
+            $query->execute(['reportId' => $id]);
+            // Récupération des résultats de la requête sous forme de tableau associatif
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+            http_response_code(200);
+            // Encodage des résultats en JSON et renvoi de la réponse
+            echo json_encode($results);
+        } catch (PDOException $e) {
+            // Si la requête échoue, on renvoie un code d'erreur (500)
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
     }
 
     public function getLastsReports(): void
@@ -87,25 +88,47 @@ Class ReportsApiRequests {
         }
     }
 
-    public function getAllReports(): void
+    public function getLastHourReportsByLocation(string $location): void
     {
 
-        // Préparation de la requête de sélection
-        $query = $this->pdo->prepare('SELECT * FROM REPORT');
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 120;');
 
-        // Exécution de la requête
         try {
-            $query->execute();
-            // Récupération des résultats de la requête sous forme de tableau associatif
+            $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+            if (empty($results)) {
+                HttpHandlerUtilities::setHTTPResponse(404, False);
+                exit();
+            }
             http_response_code(200);
-            // Encodage des résultats en JSON et renvoi de la réponse
             echo json_encode($results);
+
         } catch (PDOException $e) {
-            // Si la requête échoue, on renvoie un code d'erreur (500)
             HttpHandlerUtilities::setHTTPResponse(500, False);
         }
+
+
+    }
+
+    public function getLastReportByLocation(string $location): void
+    {
+
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 1;');
+
+        try {
+            $query->execute(['locationName' => ucfirst($location)]);
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                HttpHandlerUtilities::setHTTPResponse(404, False);
+                exit();
+            }
+            http_response_code(200);
+            echo json_encode($results);
+
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+
     }
 
     public function updateReport(string $id): void
@@ -142,19 +165,49 @@ Class ReportsApiRequests {
     public function deleteReport(string $id): void
     {
 
-            // Suppression du relevé de température et d'humidité de la base de données
-            $query = $this->pdo->prepare('DELETE FROM REPORT WHERE reportId= :reportId');
+        // Suppression du relevé de température et d'humidité de la base de données
+        $query = $this->pdo->prepare('DELETE FROM REPORT WHERE reportId = :reportId');
 
-            try {
+        try {
 
-                $query->execute(['reportId' => $id]);
-                // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
-                HttpHandlerUtilities::setHTTPResponse(200, True);
+            $query->execute(['reportId' => $id]);
+            // Si la requête s'est bien exécutée, on renvoie un code de succès (200)
+            HttpHandlerUtilities::setHTTPResponse(200, True);
 
-            } catch (PDOException $e) {
-                // Si la requête échoue, on renvoie un code d'erreur (500)
-                HttpHandlerUtilities::setHTTPResponse(500, False);
-            }
+        } catch (PDOException $e) {
+            // Si la requête échoue, on renvoie un code d'erreur (500)
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+    }
+
+    public function routeSwitcher(string $request_method, array $routeInfoArray) : void
+    {
+        switch ($request_method) {
+            case "GET":
+                if (isset($routeInfoArray['id'])) {
+                    $this->getReport($routeInfoArray['id']);
+                } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
+                    $this->getLastReportByLocation($routeInfoArray['location']);
+                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
+                    $this->getLastHourReportsByLocation($routeInfoArray['location']);
+                } else {
+                    $this->getLastsReports();
+                }
+                break;
+            case "POST":
+                $this->addReport();
+                break;
+            case 'PUT':
+                $this->updateReport($routeInfoArray['id']);
+                break;
+            case 'DELETE':
+                $this->deleteReport($routeInfoArray['id']);
+                break;
+            default:
+                header("HTTP/1.0 405 Method Not Allowed");
+                HttpHandlerUtilities::setHTTPResponse(405, false);
+                break;
+        }
     }
 
 }
