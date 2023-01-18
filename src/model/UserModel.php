@@ -1,6 +1,7 @@
 <?php
 
 namespace model;
+
 use PDO;
 use PDOException;
 use utility\Middleware;
@@ -21,10 +22,10 @@ class UserModel
         try {
             $query->execute(['userId' => $id]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
     }
 
@@ -35,10 +36,10 @@ class UserModel
         try {
             $query->execute(['userEmail' => $email]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
     }
 
@@ -61,13 +62,13 @@ class UserModel
 
             try {
                 $query->execute();
-                Middleware::setHTTPResponse(200, "Success",true);
+                Middleware::setHTTPResponse(200, "Success", true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error",true);
+                Middleware::setHTTPResponse(500, "Server error", true);
                 echo $e->getMessage();
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters",true);
+            Middleware::setHTTPResponse(400, "Wrong parameters", true);
         }
 
     }
@@ -89,20 +90,20 @@ class UserModel
                 $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error",true);
+                Middleware::setHTTPResponse(500, "Server error", true);
                 exit();
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters",true);
+            Middleware::setHTTPResponse(400, "Wrong parameters", true);
             exit();
         }
 
         $hashedPassword = $results[0]['userPassword'];
 
         if (Middleware::isValidPassword($userPassword, $hashedPassword)) {
-            Middleware::setHTTPResponse(200, true,true);
+            Middleware::setHTTPResponse(200, true, true);
         } else {
-            Middleware::setHTTPResponse(200, false,true );
+            Middleware::setHTTPResponse(200, false, true);
         }
 
     }
@@ -121,12 +122,12 @@ class UserModel
 
             try {
                 $query->execute(['userName' => $userName, 'userPassword' => $hashedPassword, 'userEmail' => $email]);
-                Middleware::setHTTPResponse(200, "Success",true);
+                Middleware::setHTTPResponse(200, "Success", true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error",true);
+                Middleware::setHTTPResponse(500, "Server error", true);
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters",true);
+            Middleware::setHTTPResponse(400, "Wrong parameters", true);
         }
 
     }
@@ -139,10 +140,10 @@ class UserModel
         try {
 
             $query->execute(['userEmail' => $email]);
-            Middleware::setHTTPResponse(200, "Success",true);
+            Middleware::setHTTPResponse(200, "Success", true);
 
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
     }
 

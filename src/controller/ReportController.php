@@ -1,6 +1,7 @@
 <?php
 
 namespace controller;
+
 use model\ReportModel;
 use utility\Middleware;
 
@@ -15,6 +16,7 @@ class ReportController
         $this->pdo = $pdo;
         $this->reportModel = new ReportModel($this->pdo);
     }
+
     public function requestSelector(string $requestMethod, array $routeInfoArray): void
     {
         switch ($requestMethod) {
@@ -38,18 +40,18 @@ class ReportController
                 if (isset($routeInfoArray['id'])) {
                     $this->reportModel->updateReport($routeInfoArray['id']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
+                    Middleware::setHTTPResponse(404, "Route not found", true);
                 }
                 break;
             case 'DELETE':
                 if (isset($routeInfoArray['id'])) {
                     $this->reportModel->deleteReport($routeInfoArray['id']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
+                    Middleware::setHTTPResponse(404, "Route not found", true);
                 }
                 break;
             default:
-                Middleware::setHTTPResponse(405, "Method not allowed",true);
+                Middleware::setHTTPResponse(405, "Method not allowed", true);
                 break;
         }
     }

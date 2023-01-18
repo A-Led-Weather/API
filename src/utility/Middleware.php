@@ -57,7 +57,7 @@ abstract class Middleware
                 $routeArray['route_base'] = $routeExplode[1];
                 break;
             default:
-                self::setHTTPResponse(404, "Route not found",  true);
+                self::setHTTPResponse(404, "Route not found", true);
                 exit();
         }
         return $routeArray;

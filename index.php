@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require "vendor/autoload.php";
+
 use controller\ReportController;
 use controller\UserController;
 use utility\DbConnector;
@@ -36,6 +37,6 @@ switch ($routeInfoArray['route_base']) {
         $usersRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     default:
-        Middleware::setHTTPResponse(404, "Route not found",true);
+        Middleware::setHTTPResponse(404, "Route not found", true);
         break;
 }

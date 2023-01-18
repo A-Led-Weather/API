@@ -1,8 +1,10 @@
 <?php
 
 namespace controller;
+
 use model\UserModel;
 use utility\Middleware;
+
 class UserController
 {
 
@@ -24,7 +26,7 @@ class UserController
                 } elseif (isset($routeInfoArray['email'])) {
                     $this->userModel->getUserByEmail($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
+                    Middleware::setHTTPResponse(404, "Route not found", true);
                 }
                 break;
             case "POST":
@@ -38,18 +40,18 @@ class UserController
                 if (isset($routeInfoArray['email'])) {
                     $this->userModel->updateUser($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
+                    Middleware::setHTTPResponse(404, "Route not found", true);
                 }
                 break;
             case 'DELETE':
                 if (isset($routeInfoArray['email'])) {
                     $this->userModel->deleteUser($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
+                    Middleware::setHTTPResponse(404, "Route not found", true);
                 }
                 break;
             default:
-                Middleware::setHTTPResponse(405, "Method not allowed",true);
+                Middleware::setHTTPResponse(405, "Method not allowed", true);
                 break;
         }
     }

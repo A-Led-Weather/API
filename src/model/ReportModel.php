@@ -1,6 +1,7 @@
 <?php
 
 namespace model;
+
 use PDO;
 use PDOException;
 use utility\Middleware;
@@ -22,7 +23,7 @@ class ReportModel
         try {
             $query->execute(['reportId' => $id]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
             Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
@@ -38,14 +39,14 @@ class ReportModel
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                Middleware::setHTTPResponse(404, "Location not found",true);
+                Middleware::setHTTPResponse(404, "Location not found", true);
                 exit();
             }
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
 
     }
@@ -59,10 +60,10 @@ class ReportModel
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                Middleware::setHTTPResponse(404, "Location not found",true);
+                Middleware::setHTTPResponse(404, "Location not found", true);
                 exit();
             }
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
@@ -81,10 +82,10 @@ class ReportModel
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                Middleware::setHTTPResponse(404, "Location not found",true);
+                Middleware::setHTTPResponse(404, "Location not found", true);
                 exit();
             }
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
@@ -102,10 +103,10 @@ class ReportModel
         try {
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success",false);
+            Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
     }
 
@@ -131,10 +132,10 @@ class ReportModel
                 $query->execute();
                 Middleware::setHTTPResponse(200, "Success", true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error",true);
+                Middleware::setHTTPResponse(500, "Server error", true);
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters",true);
+            Middleware::setHTTPResponse(400, "Wrong parameters", true);
         }
 
     }
@@ -152,12 +153,12 @@ class ReportModel
 
             try {
                 $query->execute(['temperature' => $temperature, 'humidity' => $humidity, 'reportId' => $id]);
-                Middleware::setHTTPResponse(200, "Success",true);
+                Middleware::setHTTPResponse(200, "Success", true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error",true);
+                Middleware::setHTTPResponse(500, "Server error", true);
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters",true);
+            Middleware::setHTTPResponse(400, "Wrong parameters", true);
         }
 
     }
@@ -170,10 +171,10 @@ class ReportModel
         try {
 
             $query->execute(['reportId' => $id]);
-            Middleware::setHTTPResponse(200, "Success",true);
+            Middleware::setHTTPResponse(200, "Success", true);
 
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error",true);
+            Middleware::setHTTPResponse(500, "Server error", true);
         }
     }
 
