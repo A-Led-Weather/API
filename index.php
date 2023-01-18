@@ -7,6 +7,7 @@ require "vendor/autoload.php";
 require "classes/DbConnector.php";
 require "classes/Middleware.php";
 require "classes/ReportsRequests.php";
+require "classes/UsersRequests.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -30,6 +31,10 @@ switch ($routeInfoArray['route_base']) {
     case 'reports':
         $reportsRequests = new ReportsRequests($pdo);
         $reportsRequests->requestSelector($requestMethod, $routeInfoArray);
+        break;
+    case 'users':
+        $usersRequests = new UsersRequests($pdo);
+        $usersRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     default:
         Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
