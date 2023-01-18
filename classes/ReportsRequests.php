@@ -10,9 +10,9 @@ class ReportsRequests
         $this->pdo = $pdo;
     }
 
-    public function requestSelector(string $request_method, array $routeInfoArray): void
+    public function requestSelector(string $requestMethod, array $routeInfoArray): void
     {
-        switch ($request_method) {
+        switch ($requestMethod) {
             case "GET":
                 if (isset($routeInfoArray['id'])) {
                     $this->getReport($routeInfoArray['id']);
