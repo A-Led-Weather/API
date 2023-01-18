@@ -36,8 +36,7 @@ class ReportsRequests
                 $this->deleteReport($routeInfoArray['id']);
                 break;
             default:
-                header("HTTP/1.0 405 Method Not Allowed");
-                HttpHandlerUtilities::setHTTPResponse(405, false);
+                Middleware::setHTTPResponse(405, "Method not allowed", "HTTP/1.0 405 Method Not Allowed", true);
                 break;
         }
     }
@@ -49,10 +48,10 @@ class ReportsRequests
         try {
             $query->execute(['reportId' => $id]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            http_response_code(200);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
         }
     }
 
@@ -65,14 +64,14 @@ class ReportsRequests
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                HttpHandlerUtilities::setHTTPResponse(404, False);
+                Middleware::setHTTPResponse(404, "Location not found", "HTTP/1.0 404 Not Found", true);
                 exit();
             }
-            http_response_code(200);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
         }
 
     }
@@ -86,14 +85,14 @@ class ReportsRequests
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                HttpHandlerUtilities::setHTTPResponse(404, False);
+                Middleware::setHTTPResponse(404, "Location not found", "HTTP/1.0 404 Not Found", true);
                 exit();
             }
-            http_response_code(200);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
         }
 
 
@@ -108,14 +107,14 @@ class ReportsRequests
             $query->execute(['locationName' => ucfirst($location)]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
             if (empty($results)) {
-                HttpHandlerUtilities::setHTTPResponse(404, False);
+                Middleware::setHTTPResponse(404, "Location not found", "HTTP/1.0 404 Not Found", true);
                 exit();
             }
-            http_response_code(200);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             echo json_encode($results);
 
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", false);
         }
 
 
@@ -129,10 +128,10 @@ class ReportsRequests
         try {
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            http_response_code(200);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
         }
     }
 
@@ -156,12 +155,12 @@ class ReportsRequests
 
             try {
                 $query->execute();
-                HttpHandlerUtilities::setHTTPResponse(200, True);
+                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             } catch (PDOException $e) {
-                HttpHandlerUtilities::setHTTPResponse(500, False);
+                Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
             }
         } else {
-            HttpHandlerUtilities::setHTTPResponse(401, False);
+            Middleware::setHTTPResponse(400, "Wrong parameters", "HTTP/1.0 400 Bad Request", true);
         }
 
     }
@@ -178,17 +177,13 @@ class ReportsRequests
             $query = $this->pdo->prepare('UPDATE REPORT SET temperature = :temperature, humidity = :humidity WHERE reportId = :reportId');
 
             try {
-
                 $query->execute(['temperature' => $temperature, 'humidity' => $humidity, 'reportId' => $id]);
-
-                HttpHandlerUtilities::setHTTPResponse(200, True);
-
+                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
             } catch (PDOException $e) {
-                HttpHandlerUtilities::setHTTPResponse(500, False);
+                Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
             }
-
         } else {
-            HttpHandlerUtilities::setHTTPResponse(400, False);
+            Middleware::setHTTPResponse(400, "Wrong parameters", "HTTP/1.0 400 Bad Request", true);
         }
 
     }
@@ -201,10 +196,10 @@ class ReportsRequests
         try {
 
             $query->execute(['reportId' => $id]);
-            HttpHandlerUtilities::setHTTPResponse(200, True);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
 
         } catch (PDOException $e) {
-            HttpHandlerUtilities::setHTTPResponse(500, False);
+            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
         }
     }
 
