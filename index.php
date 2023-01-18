@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 require "vendor/autoload.php";
 
+require "classes/DbConnector.php";
 require "classes/Middleware.php";
 require "classes/ReportsRequests.php";
-require "classes/DbConnector.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
