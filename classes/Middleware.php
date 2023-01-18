@@ -2,10 +2,24 @@
 
 abstract class Middleware
 {
-    public function createToken(): string
+    public static function createToken(): string
     {
         $tokenBytes = random_bytes(16);
         return bin2hex($tokenBytes);
+    }
+
+    public static function hashPassword(string $password): string
+    {
+        return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    public static function isValidPassword(string $password, string $hashedPassword): bool
+    {
+        if (password_verify($password, $hashedPassword)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function fetchRoutePathParameters(string $route): array
@@ -29,7 +43,13 @@ abstract class Middleware
                 if (is_numeric($routeExplode[2])) {
                     $routeArray['id'] = $routeExplode[2];
                 } else {
-                    $routeArray['location'] = $routeExplode[2];
+                    if (!strpos($routeExplode[2], '@') && $routeExplode[2] != 'login') {
+                        $routeArray['location'] = $routeExplode[2];
+                    } elseif ($routeExplode[2] == 'login')
+                        $routeArray['login'] = true;
+                    {
+                        $routeArray['email'] = $routeExplode[2];
+                    }
                 }
                 break;
             case 2:
@@ -42,7 +62,7 @@ abstract class Middleware
         return $routeArray;
     }
 
-    public static function setHTTPResponse(int $httpCode, string $state, string $header, bool $sendRequestState): void
+    public static function setHTTPResponse(int $httpCode, mixed $state, string $header, bool $sendRequestState): void
     {
         http_response_code($httpCode);
         header($header);
