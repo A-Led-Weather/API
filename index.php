@@ -17,7 +17,7 @@ $dbName = $_ENV['DB_NAME'];
 $dbUser = $_ENV['DB_USER'];
 $dbPassword = $_ENV['DB_PASSWORD'];
 
-$request_method = $_SERVER["REQUEST_METHOD"];
+$requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
 $dbConnector = new DbConnector($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
@@ -29,11 +29,9 @@ switch ($routeInfoArray['route_base']) {
 
     case 'reports':
         $reportsRequests = new ReportsRequests($pdo);
-        $reportsRequests->requestSelector($request_method, $routeInfoArray);
+        $reportsRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     default:
-        // Route invalide
-        header("HTTP/1.0 404 Not Found");
         Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
         break;
 }
