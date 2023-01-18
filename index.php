@@ -11,7 +11,7 @@ require "classes/HttpHandlerUtilities.php";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$dbDriver = $_ENV['DB_CONNECTION'];
+$dbConnection = $_ENV['DB_CONNECTION'];
 $dbHost = $_ENV['DB_HOST'];
 $dbName = $_ENV['DB_NAME'];
 $dbUser = $_ENV['DB_USER'];
@@ -20,7 +20,7 @@ $dbPassword = $_ENV['DB_PASSWORD'];
 $request_method = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
-$pdo = dbConnection($dbDriver, $dbHost, $dbName, $dbUser, $dbPassword);
+$pdo = dbConnection($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
 
 $reportsRequests = new ReportsApiRequests($pdo);
 
