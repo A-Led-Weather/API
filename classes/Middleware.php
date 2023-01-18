@@ -1,6 +1,6 @@
 <?php
 
-abstract class HttpHandlerUtilities
+abstract class Middleware
 {
     public static function fetchRoutePathParameters(string $route): array
     {
@@ -10,7 +10,7 @@ abstract class HttpHandlerUtilities
         if (!in_array($routeExplode[1], ["reports", "devices", "locations", "users"])) {
             // Route invalide
             header("HTTP/1.0 404 Not Found");
-            self::setHTTPResponse(404, false);
+            self::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
             exit();
         }
 
@@ -29,18 +29,20 @@ abstract class HttpHandlerUtilities
             $routeArray['route_base'] = $routeExplode[1];
         } else {
             // Route invalide
-            header("HTTP/1.0 404 Not Found");
-            self::setHTTPResponse(404, false);
+            self::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
             exit();
         }
 
         return $routeArray;
     }
 
-    public static function setHTTPResponse(int $httpCode, bool $state): void
+    public static function setHTTPResponse(int $httpCode, string $state, string $header, bool $sendRequestState): void
     {
         http_response_code($httpCode);
+        header($header);
         header('Content-Type: application/json');
-        echo json_encode(['Success' => $state]);
+        if ($sendRequestState) {
+            echo json_encode(['result' => $state]);
+        }
     }
 }
