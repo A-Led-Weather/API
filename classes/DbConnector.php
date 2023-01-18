@@ -8,7 +8,7 @@ class DbConnector
     private string $dbUser;
     private string $dbPassword;
 
-    function __construct(string $dbConnection, string $dbHost, string $dbName, string $dbUser, string $dbPassword)
+    public function __construct(string $dbConnection, string $dbHost, string $dbName, string $dbUser, string $dbPassword)
     {
         $this->dbConnection = $dbConnection;
         $this->dbHost = $dbHost;
@@ -17,7 +17,7 @@ class DbConnector
         $this->dbPassword = $dbPassword;
     }
 
-    public function dbConnection() : PDO
+    public function dbConnection(): PDO
     {
         try {
             $pdo = new PDO($this->dbConnection . ':host=' . $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
