@@ -3,13 +3,10 @@
 declare(strict_types=1);
 
 require "vendor/autoload.php";
-
-require "src/utility/DbConnector.php";
-require "src/utility/Middleware.php";
-require "src/model/ReportModel.php";
-require "src/model/UserModel.php";
-require "src/controller/ReportController.php";
-require "src/controller/UserController.php";
+use controller\ReportController;
+use controller\UserController;
+use utility\DbConnector;
+use utility\Middleware;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();

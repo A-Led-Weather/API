@@ -1,5 +1,8 @@
 <?php
 
+namespace controller;
+use model\UserModel;
+use utility\Middleware;
 class UserController
 {
 

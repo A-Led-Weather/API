@@ -1,5 +1,10 @@
 <?php
 
+namespace model;
+use PDO;
+use PDOException;
+use utility\Middleware;
+
 class UserModel
 {
     private object $pdo;

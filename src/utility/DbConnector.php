@@ -1,5 +1,9 @@
 <?php
 
+namespace utility;
+use PDO;
+use PDOException;
+
 class DbConnector
 {
     private string $dbConnection;

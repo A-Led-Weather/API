@@ -1,5 +1,8 @@
 <?php
 
+namespace controller;
+use model\ReportModel;
+use utility\Middleware;
 
 class ReportController
 {

@@ -1,5 +1,6 @@
 <?php
 
+namespace utility;
 abstract class Middleware
 {
     public static function createToken(): string
