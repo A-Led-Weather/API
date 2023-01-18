@@ -1,6 +1,6 @@
 <?php
 
-class ReportsApiRequests
+class ReportsRequests
 {
 
     private object $pdo;
@@ -10,7 +10,7 @@ class ReportsApiRequests
         $this->pdo = $pdo;
     }
 
-    public function routeSwitcher(string $request_method, array $routeInfoArray): void
+    public function requestSelector(string $request_method, array $routeInfoArray): void
     {
         switch ($request_method) {
             case "GET":
@@ -20,6 +20,8 @@ class ReportsApiRequests
                     $this->getLastReportByLocation($routeInfoArray['location']);
                 } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
                     $this->getLastHourReportsByLocation($routeInfoArray['location']);
+                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'daily') {
+                    $this->getLastDayReportsByLocation($routeInfoArray['location']);
                 } else {
                     $this->getLastsReports();
                 }
@@ -78,7 +80,29 @@ class ReportsApiRequests
     public function getLastHourReportsByLocation(string $location): void
     {
 
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 120;');
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 60;');
+
+        try {
+            $query->execute(['locationName' => ucfirst($location)]);
+            $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                HttpHandlerUtilities::setHTTPResponse(404, False);
+                exit();
+            }
+            http_response_code(200);
+            echo json_encode($results);
+
+        } catch (PDOException $e) {
+            HttpHandlerUtilities::setHTTPResponse(500, False);
+        }
+
+
+    }
+
+    public function getLastDayReportsByLocation(string $location): void
+    {
+
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 1440;');
 
         try {
             $query->execute(['locationName' => ucfirst($location)]);
