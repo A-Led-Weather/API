@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 require "vendor/autoload.php";
 require "dbConnection.php";
-require "classes/AuthenticationApiRequests.php";
-require "classes/ReportsApiRequests.php";
+require "classes/AuthenticationRequests.php";
+require "classes/ReportsRequests.php";
 require "classes/HttpHandlerUtilities.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -22,19 +22,17 @@ $route = $_SERVER["REQUEST_URI"];
 
 $pdo = dbConnection($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
 
-$reportsRequests = new ReportsApiRequests($pdo);
-
 $routeInfoArray = HttpHandlerUtilities::fetchRoutePathParameters($route);
 
 switch ($routeInfoArray['route_base']) {
 
     case 'reports':
-        $reportsRequests->routeSwitcher($request_method, $routeInfoArray);
+        $reportsRequests = new ReportsRequests($pdo);
+        $reportsRequests->requestSelector($request_method, $routeInfoArray);
         break;
     default:
         // Route invalide
         header("HTTP/1.0 404 Not Found");
         HttpHandlerUtilities::setHTTPResponse(404, false);
         break;
-
 }
