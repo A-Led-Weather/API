@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 require "vendor/autoload.php";
-require "dbConnection.php";
-require "classes/AuthenticationRequests.php";
-require "classes/ReportsRequests.php";
+
 require "classes/Middleware.php";
+require "classes/ReportsRequests.php";
+require "classes/DbConnector.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -20,7 +20,8 @@ $dbPassword = $_ENV['DB_PASSWORD'];
 $request_method = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
-$pdo = dbConnection($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
+$dbConnector = new DbConnector($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
+$pdo = $dbConnector->dbConnection();
 
 $routeInfoArray = Middleware::fetchRoutePathParameters($route);
 
