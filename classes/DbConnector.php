@@ -23,7 +23,7 @@ class DbConnector
             $pdo = new PDO($this->dbConnection . ':host=' . $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+            Middleware::setHTTPResponse(500, "Server error",true);
             exit;
         }
         return $pdo;

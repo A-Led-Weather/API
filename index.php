@@ -37,6 +37,6 @@ switch ($routeInfoArray['route_base']) {
         $usersRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     default:
-        Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+        Middleware::setHTTPResponse(404, "Route not found",true);
         break;
 }

@@ -18,7 +18,7 @@ class UsersRequests
                 } elseif (isset($routeInfoArray['email'])) {
                     $this->getUserByEmail($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                    Middleware::setHTTPResponse(404, "Route not found",true);
                 }
                 break;
             case "POST":
@@ -32,18 +32,18 @@ class UsersRequests
                 if (isset($routeInfoArray['email'])) {
                     $this->updateUser($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                    Middleware::setHTTPResponse(404, "Route not found",true);
                 }
                 break;
             case 'DELETE':
                 if (isset($routeInfoArray['email'])) {
                     $this->deleteUser($routeInfoArray['email']);
                 } else {
-                    Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                    Middleware::setHTTPResponse(404, "Route not found",true);
                 }
                 break;
             default:
-                Middleware::setHTTPResponse(405, "Method not allowed", "HTTP/1.0 405 Method Not Allowed", true);
+                Middleware::setHTTPResponse(405, "Method not allowed",true);
                 break;
         }
     }
@@ -55,10 +55,10 @@ class UsersRequests
         try {
             $query->execute(['userId' => $id]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
+            Middleware::setHTTPResponse(200, "Success",false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+            Middleware::setHTTPResponse(500, "Server error",true);
         }
     }
 
@@ -69,10 +69,10 @@ class UsersRequests
         try {
             $query->execute(['userEmail' => $email]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
+            Middleware::setHTTPResponse(200, "Success",false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+            Middleware::setHTTPResponse(500, "Server error",true);
         }
     }
 
@@ -95,13 +95,13 @@ class UsersRequests
 
             try {
                 $query->execute();
-                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
+                Middleware::setHTTPResponse(200, "Success",true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+                Middleware::setHTTPResponse(500, "Server error",true);
                 echo $e->getMessage();
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters", "HTTP/1.0 400 Bad Request", true);
+            Middleware::setHTTPResponse(400, "Wrong parameters",true);
         }
 
     }
@@ -123,20 +123,20 @@ class UsersRequests
                 $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+                Middleware::setHTTPResponse(500, "Server error",true);
                 exit();
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters", "HTTP/1.0 400 Bad Request", true);
+            Middleware::setHTTPResponse(400, "Wrong parameters",true);
             exit();
         }
 
         $hashedPassword = $results[0]['userPassword'];
 
         if (Middleware::isValidPassword($userPassword, $hashedPassword)) {
-            Middleware::setHTTPResponse(200, true, "HTTP/1.0 200 OK", true);
+            Middleware::setHTTPResponse(200, true,true);
         } else {
-            Middleware::setHTTPResponse(200, false,"HTTP/1.0 200 OK", true );
+            Middleware::setHTTPResponse(200, false,true );
         }
 
     }
@@ -155,12 +155,12 @@ class UsersRequests
 
             try {
                 $query->execute(['userName' => $userName, 'userPassword' => $hashedPassword, 'userEmail' => $email]);
-                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
+                Middleware::setHTTPResponse(200, "Success",true);
             } catch (PDOException $e) {
-                Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+                Middleware::setHTTPResponse(500, "Server error",true);
             }
         } else {
-            Middleware::setHTTPResponse(400, "Wrong parameters", "HTTP/1.0 400 Bad Request", true);
+            Middleware::setHTTPResponse(400, "Wrong parameters",true);
         }
 
     }
@@ -173,10 +173,10 @@ class UsersRequests
         try {
 
             $query->execute(['userEmail' => $email]);
-            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
+            Middleware::setHTTPResponse(200, "Success",true);
 
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+            Middleware::setHTTPResponse(500, "Server error",true);
         }
     }
 

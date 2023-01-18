@@ -28,7 +28,7 @@ abstract class Middleware
         $routeExplode = explode('/', $route);
 
         if (!in_array($routeExplode[1], ["reports", "devices", "locations", "users"])) {
-            self::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+            self::setHTTPResponse(404, "Route not found", true);
             exit();
         }
 
@@ -56,16 +56,15 @@ abstract class Middleware
                 $routeArray['route_base'] = $routeExplode[1];
                 break;
             default:
-                self::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                self::setHTTPResponse(404, "Route not found",  true);
                 exit();
         }
         return $routeArray;
     }
 
-    public static function setHTTPResponse(int $httpCode, mixed $state, string $header, bool $sendRequestState): void
+    public static function setHTTPResponse(int $httpCode, mixed $state, bool $sendRequestState): void
     {
         http_response_code($httpCode);
-        header($header);
         header('Content-Type: application/json');
         if ($sendRequestState) {
             echo json_encode(['result' => $state]);
