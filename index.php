@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 require "vendor/autoload.php";
 
-require "classes/DbConnector.php";
-require "classes/Middleware.php";
-require "classes/ReportsRequests.php";
-require "classes/UsersRequests.php";
+require "src/utility/DbConnector.php";
+require "src/utility/Middleware.php";
+require "src/model/ReportModel.php";
+require "src/model/UserModel.php";
+require "src/controller/ReportController.php";
+require "src/controller/UserController.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -29,11 +31,11 @@ $routeInfoArray = Middleware::fetchRoutePathParameters($route);
 switch ($routeInfoArray['route_base']) {
 
     case 'reports':
-        $reportsRequests = new ReportsRequests($pdo);
+        $reportsRequests = new ReportController($pdo);
         $reportsRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     case 'users':
-        $usersRequests = new UsersRequests($pdo);
+        $usersRequests = new UserController($pdo);
         $usersRequests->requestSelector($requestMethod, $routeInfoArray);
         break;
     default:

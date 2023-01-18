@@ -1,6 +1,6 @@
 <?php
 
-class ReportsRequests
+class ReportModel
 {
 
     private object $pdo;
@@ -8,45 +8,6 @@ class ReportsRequests
     public function __construct(object $pdo)
     {
         $this->pdo = $pdo;
-    }
-
-    public function requestSelector(string $requestMethod, array $routeInfoArray): void
-    {
-        switch ($requestMethod) {
-            case "GET":
-                if (isset($routeInfoArray['id'])) {
-                    $this->getReportById($routeInfoArray['id']);
-                } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
-                    $this->getLastReportByLocation($routeInfoArray['location']);
-                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
-                    $this->getLastHourReportsByLocation($routeInfoArray['location']);
-                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'daily') {
-                    $this->getLastDayReportsByLocation($routeInfoArray['location']);
-                } else {
-                    $this->getLastsReports();
-                }
-                break;
-            case "POST":
-                $this->addReport();
-                break;
-            case 'PUT':
-                if (isset($routeInfoArray['id'])) {
-                    $this->updateReport($routeInfoArray['id']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
-                }
-                break;
-            case 'DELETE':
-                if (isset($routeInfoArray['id'])) {
-                    $this->deleteReport($routeInfoArray['id']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
-                }
-                break;
-            default:
-                Middleware::setHTTPResponse(405, "Method not allowed",true);
-                break;
-        }
     }
 
     public function getReportById(string $id): void

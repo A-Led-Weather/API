@@ -1,51 +1,12 @@
 <?php
 
-class UsersRequests
+class UserModel
 {
     private object $pdo;
 
     public function __construct(object $pdo)
     {
         $this->pdo = $pdo;
-    }
-
-    public function requestSelector(string $requestMethod, array $routeInfoArray): void
-    {
-        switch ($requestMethod) {
-            case "GET":
-                if (isset($routeInfoArray['id'])) {
-                    $this->getUserById($routeInfoArray['id']);
-                } elseif (isset($routeInfoArray['email'])) {
-                    $this->getUserByEmail($routeInfoArray['email']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
-                }
-                break;
-            case "POST":
-                if (isset($routeInfoArray['login'])) {
-                    $this->authenticateUser();
-                } else {
-                    $this->addUser();
-                }
-                break;
-            case 'PUT':
-                if (isset($routeInfoArray['email'])) {
-                    $this->updateUser($routeInfoArray['email']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
-                }
-                break;
-            case 'DELETE':
-                if (isset($routeInfoArray['email'])) {
-                    $this->deleteUser($routeInfoArray['email']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found",true);
-                }
-                break;
-            default:
-                Middleware::setHTTPResponse(405, "Method not allowed",true);
-                break;
-        }
     }
 
     public function getUserById(string $id): void
