@@ -1,6 +1,6 @@
 <?php
 
-class AuthenticationApiRequests
+class AuthenticationRequests
 {
     private object $pdo;
 
