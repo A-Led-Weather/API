@@ -6,7 +6,7 @@ require "vendor/autoload.php";
 require "dbConnection.php";
 require "classes/AuthenticationRequests.php";
 require "classes/ReportsRequests.php";
-require "classes/HttpHandlerUtilities.php";
+require "classes/Middleware.php";
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -22,7 +22,7 @@ $route = $_SERVER["REQUEST_URI"];
 
 $pdo = dbConnection($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
 
-$routeInfoArray = HttpHandlerUtilities::fetchRoutePathParameters($route);
+$routeInfoArray = Middleware::fetchRoutePathParameters($route);
 
 switch ($routeInfoArray['route_base']) {
 
@@ -33,6 +33,6 @@ switch ($routeInfoArray['route_base']) {
     default:
         // Route invalide
         header("HTTP/1.0 404 Not Found");
-        HttpHandlerUtilities::setHTTPResponse(404, false);
+        Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
         break;
 }
