@@ -15,7 +15,7 @@ class ReportsRequests
         switch ($requestMethod) {
             case "GET":
                 if (isset($routeInfoArray['id'])) {
-                    $this->getReport($routeInfoArray['id']);
+                    $this->getReportById($routeInfoArray['id']);
                 } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
                     $this->getLastReportByLocation($routeInfoArray['location']);
                 } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
@@ -30,10 +30,18 @@ class ReportsRequests
                 $this->addReport();
                 break;
             case 'PUT':
-                $this->updateReport($routeInfoArray['id']);
+                if (isset($routeInfoArray['id'])) {
+                    $this->updateReport($routeInfoArray['id']);
+                } else {
+                    Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                }
                 break;
             case 'DELETE':
-                $this->deleteReport($routeInfoArray['id']);
+                if (isset($routeInfoArray['id'])) {
+                    $this->deleteReport($routeInfoArray['id']);
+                } else {
+                    Middleware::setHTTPResponse(404, "Route not found", "HTTP/1.0 404 Not Found", true);
+                }
                 break;
             default:
                 Middleware::setHTTPResponse(405, "Method not allowed", "HTTP/1.0 405 Method Not Allowed", true);
@@ -41,7 +49,7 @@ class ReportsRequests
         }
     }
 
-    public function getReport(string $id): void
+    public function getReportById(string $id): void
     {
         $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE (reportId = :reportId)');
 
@@ -138,13 +146,13 @@ class ReportsRequests
     public function addReport(): void
     {
 
-        $reportValues = json_decode(file_get_contents("php://input"), true);
+        $payload = json_decode(file_get_contents("php://input"), true);
 
-        if (isset($reportValues['temperature']) && isset($reportValues['humidity']) && isset($reportValues['deviceUuid']) && isset($reportValues['locationName'])) {
-            $temperature = $reportValues['temperature'];
-            $humidity = $reportValues['humidity'];
-            $deviceUuid = $reportValues['deviceUuid'];
-            $locationName = $reportValues['locationName'];
+        if (isset($payload['temperature']) && isset($payload['humidity']) && isset($payload['deviceUuid']) && isset($payload['locationName'])) {
+            $temperature = $payload['temperature'];
+            $humidity = $payload['humidity'];
+            $deviceUuid = $payload['deviceUuid'];
+            $locationName = $payload['locationName'];
 
             $query = $this->pdo->prepare('INSERT INTO REPORT (temperature, humidity, dateTime, deviceUuid, locationName) VALUES (:temperature, :humidity, NOW(), :deviceUuid, :locationName)');
 
@@ -155,7 +163,7 @@ class ReportsRequests
 
             try {
                 $query->execute();
-                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
+                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
             } catch (PDOException $e) {
                 Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
             }
@@ -168,17 +176,17 @@ class ReportsRequests
     public function updateReport(string $id): void
     {
 
-        $_PUT = json_decode(file_get_contents("php://input"), true);
+        $payload = json_decode(file_get_contents("php://input"), true);
 
-        if (isset($_PUT['temperature']) && isset($_PUT['humidity']) && isset($_PUT['id'])) {
-            $temperature = $_PUT['temperature'];
-            $humidity = $_PUT['humidity'];
+        if (isset($payload['temperature']) && isset($payload['humidity']) && isset($payload['id'])) {
+            $temperature = $payload['temperature'];
+            $humidity = $payload['humidity'];
 
             $query = $this->pdo->prepare('UPDATE REPORT SET temperature = :temperature, humidity = :humidity WHERE reportId = :reportId');
 
             try {
                 $query->execute(['temperature' => $temperature, 'humidity' => $humidity, 'reportId' => $id]);
-                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
+                Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
             } catch (PDOException $e) {
                 Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
             }
@@ -196,7 +204,7 @@ class ReportsRequests
         try {
 
             $query->execute(['reportId' => $id]);
-            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", false);
+            Middleware::setHTTPResponse(200, "Success", "HTTP/1.0 200 OK", true);
 
         } catch (PDOException $e) {
             Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
