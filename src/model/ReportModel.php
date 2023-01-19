@@ -26,7 +26,7 @@ class ReportModel
             Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", "HTTP/1.0 500 Internal Error", true);
+            Middleware::setHTTPResponse(500, "Server error",true);
         }
     }
 
@@ -51,32 +51,19 @@ class ReportModel
 
     }
 
-    public function getLastHourReportsByLocation(string $location): void
+    public function getReportsByLocationByTimeRange(string $location, string $timeRange): void
     {
 
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 60;');
-
-        try {
-            $query->execute(['locationName' => ucfirst($location)]);
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            if (empty($results)) {
-                Middleware::setHTTPResponse(404, "Location not found", true);
-                exit();
-            }
-            Middleware::setHTTPResponse(200, "Success", false);
-            echo json_encode($results);
-
-        } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", true);
+        if ($timeRange === 'hourly') {
+            $limit = 60;
+        } elseif ($timeRange === 'daily') {
+            $limit = 1440;
+        } else {
+            Middleware::setHTTPResponse(404, 'Wrong Time Range', true);
+            exit();
         }
 
-
-    }
-
-    public function getLastDayReportsByLocation(string $location): void
-    {
-
-        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT 1440;');
+        $query = $this->pdo->prepare('SELECT * FROM REPORT WHERE locationName = :locationName ORDER BY reportId DESC LIMIT '.$limit.';');
 
         try {
             $query->execute(['locationName' => ucfirst($location)]);

@@ -15,20 +15,6 @@ class UserModel
         $this->pdo = $pdo;
     }
 
-    public function getUserById(string $id): void
-    {
-        $query = $this->pdo->prepare('SELECT * FROM USER WHERE (userId = :userId)');
-
-        try {
-            $query->execute(['userId' => $id]);
-            $results = $query->fetchAll(PDO::FETCH_ASSOC);
-            Middleware::setHTTPResponse(200, "Success", false);
-            echo json_encode($results);
-        } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", true);
-        }
-    }
-
     public function getUserByEmail(string $email): void
     {
         $query = $this->pdo->prepare('SELECT * FROM USER WHERE (userEmail = :userEmail)');

@@ -17,42 +17,49 @@ class ReportController
         $this->reportModel = new ReportModel($this->pdo);
     }
 
-    public function requestSelector(string $requestMethod, array $routeInfoArray): void
+
+    public function getLastReports(): void
     {
-        switch ($requestMethod) {
-            case "GET":
-                if (isset($routeInfoArray['id'])) {
-                    $this->reportModel->getReportById($routeInfoArray['id']);
-                } elseif (isset($routeInfoArray['location']) && !isset($routeInfoArray['range'])) {
-                    $this->reportModel->getLastReportByLocation($routeInfoArray['location']);
-                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'hourly') {
-                    $this->reportModel->getLastHourReportsByLocation($routeInfoArray['location']);
-                } elseif (isset($routeInfoArray['range']) && $routeInfoArray['range'] === 'daily') {
-                    $this->reportModel->getLastDayReportsByLocation($routeInfoArray['location']);
-                } else {
-                    $this->reportModel->getLastsReports();
-                }
-                break;
-            case "POST":
-                $this->reportModel->addReport();
-                break;
-            case 'PUT':
-                if (isset($routeInfoArray['id'])) {
-                    $this->reportModel->updateReport($routeInfoArray['id']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found", true);
-                }
-                break;
-            case 'DELETE':
-                if (isset($routeInfoArray['id'])) {
-                    $this->reportModel->deleteReport($routeInfoArray['id']);
-                } else {
-                    Middleware::setHTTPResponse(404, "Route not found", true);
-                }
-                break;
-            default:
-                Middleware::setHTTPResponse(405, "Method not allowed", true);
-                break;
-        }
+        $this->reportModel->getLastsReports();
+        // Traitement des données et renvoi des réponses
     }
+
+    public function addReports(): void
+    {
+        // Validation des données reçues
+        $this->reportModel->addReport();
+        // Renvoi de la réponse
+    }
+
+    public function getReportById($id): void
+    {
+        $this->reportModel->getReportById($id);
+        // Traitement des données et renvoi des réponses
+    }
+
+    public function updateReport($id): void
+    {
+        // Validation des données reçues
+        $this->reportModel->updateReport($id);
+        // Renvoi de la réponse
+    }
+
+    public function deleteReport($id): void
+    {
+        $this->reportModel->deleteReport($id);
+        // Renvoi de la réponse
+    }
+
+    public function getLastReportByLocation($location): void
+    {
+        $this->reportModel->getLastReportByLocation($location);
+        // Traitement des données et renvoi des réponses
+    }
+
+    public function getReportsByLocationByTimeRange($location, $timeRange): void
+    {
+        $this->reportModel->getReportsByLocationByTimeRange($location, $timeRange);
+        // Traitement des données et renvoi des réponses
+    }
+
 }

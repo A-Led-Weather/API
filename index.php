@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
+require_once 'vendor/autoload.php';
 
-require "vendor/autoload.php";
-
-use controller\ReportController;
 use controller\UserController;
+use FastRoute\RouteCollector;
+use FastRoute\Dispatcher;
+use controller\ReportController;
 use utility\DbConnector;
 use utility\Middleware;
 
@@ -24,19 +24,47 @@ $route = $_SERVER["REQUEST_URI"];
 $dbConnector = new DbConnector($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
 $pdo = $dbConnector->dbConnection();
 
-$routeInfoArray = Middleware::fetchRoutePathParameters($route);
+$dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
+    //REPORTS
+    $r->addRoute('GET', '/reports', 'getLastReports');
+    $r->addRoute('POST', '/reports', 'addReports');
+    $r->addRoute('GET', '/reports/{id:\d+}', 'getReportById');
+    $r->addRoute('PUT', '/reports/{id:\d+}', 'updateReport');
+    $r->addRoute('DELETE', '/reports/{id:\d+}', 'deleteReport');
+    $r->addRoute('GET', '/reports/{location}', 'getLastReportByLocation');
+    $r->addRoute('GET', '/reports/{location}/{timeRange:hourly|daily}', 'getReportsByLocationByTimeRange');
+    //USERS
+    $r->addRoute('POST', '/users', 'addUser');
+    $r->addRoute('GET', '/users/{email}', 'getUserByEmail');
+    $r->addRoute('PUT', '/users/{email}', 'updateUser');
+    $r->addRoute('DELETE', '/users/{email}', 'deleteUser');
+    $r->addRoute('POST', '/users/login', 'authenticateUser');
+});
 
-switch ($routeInfoArray['route_base']) {
+$routeInfo = $dispatcher->dispatch($requestMethod, $route);
+var_dump($routeInfo);
 
-    case 'reports':
-        $reportsRequests = new ReportController($pdo);
-        $reportsRequests->requestSelector($requestMethod, $routeInfoArray);
+$controllers = [
+    'reports' => new ReportController($pdo),
+    'users' => new UserController($pdo),
+];
+
+switch ($routeInfo[0]) {
+    case Dispatcher::NOT_FOUND:
+        // Gestion de la route non trouvée
+        Middleware::setHTTPResponse(404, 'Route Not Found', true);
         break;
-    case 'users':
-        $usersRequests = new UserController($pdo);
-        $usersRequests->requestSelector($requestMethod, $routeInfoArray);
+    case Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        // Gestion des méthodes non autorisées
+        Middleware::setHTTPResponse(405, 'Method Not Allowed', true);
         break;
-    default:
-        Middleware::setHTTPResponse(404, "Route not found", true);
+    case Dispatcher::FOUND:
+        $handler = $routeInfo[1];
+        $vars = $routeInfo[2];
+
+        $basePath = explode("/", $route);
+        $controller = $controllers[$basePath[1]];
+        call_user_func_array([$controller, $handler], $vars);
         break;
 }
