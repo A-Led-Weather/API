@@ -50,12 +50,10 @@ $controllers = [
 
 switch ($routeInfo[0]) {
     case Dispatcher::NOT_FOUND:
-        // Gestion de la route non trouvée
         Middleware::setHTTPResponse(404, 'Route Not Found', true);
         break;
     case Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
-        // Gestion des méthodes non autorisées
         Middleware::setHTTPResponse(405, 'Method Not Allowed', true);
         break;
     case Dispatcher::FOUND:
