@@ -22,6 +22,10 @@ class UserModel
         try {
             $query->execute(['userEmail' => $email]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                Middleware::setHTTPResponse(404, "User not found", true);
+                exit();
+            }
             Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
@@ -74,6 +78,10 @@ class UserModel
             try {
                 $query->execute(['userEmail' => $userEmail]);
                 $results = $query->fetchAll(PDO::FETCH_ASSOC);
+                if (empty($results)) {
+                    Middleware::setHTTPResponse(404, "User not found", true);
+                    exit();
+                }
 
             } catch (PDOException $e) {
                 Middleware::setHTTPResponse(500, "Server error", true);

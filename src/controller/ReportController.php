@@ -33,12 +33,20 @@ class ReportController
 
     public function getReportById($id): void
     {
+        if (!is_numeric($id)) {
+            Middleware::setHTTPResponse(400, 'Invalid Values', true);
+            exit();
+        }
         $this->reportModel->getReportById($id);
         // Traitement des données et renvoi des réponses
     }
 
     public function updateReport($id): void
     {
+        if (!is_numeric($id)) {
+            Middleware::setHTTPResponse(400, 'Invalid Values', true);
+            exit();
+        }
         // Validation des données reçues
         $this->reportModel->updateReport($id);
         // Renvoi de la réponse
@@ -46,6 +54,10 @@ class ReportController
 
     public function deleteReport($id): void
     {
+        if (!is_numeric($id)) {
+            Middleware::setHTTPResponse(400, 'Invalid Values', true);
+            exit();
+        }
         $this->reportModel->deleteReport($id);
         // Renvoi de la réponse
     }

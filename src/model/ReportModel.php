@@ -23,6 +23,10 @@ class ReportModel
         try {
             $query->execute(['reportId' => $id]);
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                Middleware::setHTTPResponse(404, "Report not found", true);
+                exit();
+            }
             Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
@@ -90,6 +94,10 @@ class ReportModel
         try {
             $query->execute();
             $results = $query->fetchAll(PDO::FETCH_ASSOC);
+            if (empty($results)) {
+                Middleware::setHTTPResponse(404, "Report not found", true);
+                exit();
+            }
             Middleware::setHTTPResponse(200, "Success", false);
             echo json_encode($results);
         } catch (PDOException $e) {
