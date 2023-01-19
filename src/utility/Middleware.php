@@ -5,7 +5,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 abstract class Middleware
 {
-    public static function createToken(): string
+    public static function createMachineToken(): string
     {
         $tokenBytes = random_bytes(16);
         return bin2hex($tokenBytes);
