@@ -4,17 +4,18 @@ namespace controller;
 
 use model\UserModel;
 use utility\Middleware;
+use Medoo\Medoo;
 
 class UserController
 {
 
-    private object $pdo;
+    private Medoo $dbConnection;
     private UserModel $userModel;
 
-    public function __construct(object $pdo)
+    public function __construct($dbConnection)
     {
-        $this->pdo = $pdo;
-        $this->userModel = new UserModel($this->pdo);
+        $this->dbConnection = $dbConnection;
+        $this->userModel = new UserModel($this->dbConnection);
     }
 
     public function addUser(): void

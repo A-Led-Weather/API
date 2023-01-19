@@ -12,24 +12,24 @@ use utility\Middleware;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$dbConnection = $_ENV['DB_CONNECTION'];
+$dbType = $_ENV['DB_TYPE'];
 $dbHost = $_ENV['DB_HOST'];
 $dbName = $_ENV['DB_NAME'];
 $dbUser = $_ENV['DB_USER'];
 $dbPassword = $_ENV['DB_PASSWORD'];
+$dbPort = $_ENV['DB_PORT'];
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
-$dbConnector = new DbConnector($dbConnection, $dbHost, $dbName, $dbUser, $dbPassword);
-$pdo = $dbConnector->dbConnection();
+$dbConnector = new DbConnector($dbType, $dbHost, $dbPort, $dbName, $dbUser, $dbPassword);
+$dbConnection = $dbConnector->dbConnection();
 
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     //REPORTS
     $r->addRoute('GET', '/reports', 'getLastReports');
     $r->addRoute('POST', '/reports', 'addReports');
     $r->addRoute('GET', '/reports/{id:\d+}', 'getReportById');
-    $r->addRoute('PUT', '/reports/{id:\d+}', 'updateReport');
     $r->addRoute('DELETE', '/reports/{id:\d+}', 'deleteReport');
     $r->addRoute('GET', '/reports/{location}', 'getLastReportByLocation');
     $r->addRoute('GET', '/reports/{location}/{timeRange:hourly|daily}', 'getReportsByLocationByTimeRange');
@@ -44,8 +44,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 $routeInfo = $dispatcher->dispatch($requestMethod, $route);
 
 $controllers = [
-    'reports' => new ReportController($pdo),
-    'users' => new UserController($pdo),
+    'reports' => new ReportController($dbConnection),
+    'users' => new UserController($dbConnection),
 ];
 
 switch ($routeInfo[0]) {

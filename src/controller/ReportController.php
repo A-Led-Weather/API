@@ -4,17 +4,18 @@ namespace controller;
 
 use model\ReportModel;
 use utility\Middleware;
+use Medoo\Medoo;
 
 class ReportController
 {
 
-    private object $pdo;
+    private Medoo $dbConnection;
     private ReportModel $reportModel;
 
-    public function __construct(object $pdo)
+    public function __construct(Medoo $dbConnection)
     {
-        $this->pdo = $pdo;
-        $this->reportModel = new ReportModel($this->pdo);
+        $this->dbConnection = $dbConnection;
+        $this->reportModel = new ReportModel($this->dbConnection);
     }
 
 
@@ -39,17 +40,6 @@ class ReportController
         }
         $this->reportModel->getReportById($id);
         // Traitement des données et renvoi des réponses
-    }
-
-    public function updateReport($id): void
-    {
-        if (!is_numeric($id)) {
-            Middleware::setHTTPResponse(400, 'Invalid Values', true);
-            exit();
-        }
-        // Validation des données reçues
-        $this->reportModel->updateReport($id);
-        // Renvoi de la réponse
     }
 
     public function deleteReport($id): void
