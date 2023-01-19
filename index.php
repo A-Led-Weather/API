@@ -2,10 +2,10 @@
 
 require_once 'vendor/autoload.php';
 
-use controller\UserController;
 use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
 use controller\ReportController;
+use controller\UserController;
 use utility\DbConnector;
 use utility\Middleware;
 
@@ -42,7 +42,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 });
 
 $routeInfo = $dispatcher->dispatch($requestMethod, $route);
-var_dump($routeInfo);
 
 $controllers = [
     'reports' => new ReportController($pdo),
