@@ -86,7 +86,7 @@ class ReportModel
 
     public function addReport(): void
     {
-        $time = strtotime(self::SERVER_TIME_ADJUST);
+        $timeAdjust = strtotime(self::SERVER_TIME_ADJUST);
 
         try {
             $payload = json_decode(file_get_contents("php://input"), true);
@@ -94,7 +94,7 @@ class ReportModel
                 $this->dbConnection->insert(self::TABLE_NAME, [
                     "temperature" => $payload['temperature'],
                     "humidity" => $payload['humidity'],
-                    "dateTime" => date("Y-m-d H:i:s", $time),
+                    "dateTime" => date("Y-m-d H:i:s", $timeAdjust),
                     "deviceUuid" => $payload['deviceUuid'],
                     "locationName" => $payload['locationName']
                 ]);
