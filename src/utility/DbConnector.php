@@ -1,10 +1,10 @@
 <?php
 
-namespace utility;
+namespace Utility;
 
+use Exception;
 use Medoo\Medoo;
 use PDO;
-use PDOException;
 
 
 class DbConnector
@@ -26,24 +26,10 @@ class DbConnector
         $this->dbPassword = $dbPassword;
     }
 
-    /*public function dbConnection(): PDO
+    public function dbConnect(): Medoo
     {
         try {
-            $pdo = new PDO($this->dbConnection . ':host=' . $this->dbHost . ';dbname=' . $this->dbName, $this->dbUser, $this->dbPassword);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500, "Server error", true);
-            exit;
-        }
-        return $pdo;
-    }*/
-
-    public function dbConnection(): Medoo
-    {
-        try {
-
             $dbConnection =  new Medoo([
-                // [required]
                 'type' => $this->dbType,
                 'host' => $this->dbHost,
                 'database' => $this->dbName,
@@ -54,8 +40,8 @@ class DbConnector
                 'error' => PDO::ERRMODE_SILENT,
 
             ]);
-        } catch (PDOException $e) {
-            Middleware::setHTTPResponse(500,'Server Error', true);
+        } catch (Exception $e) {
+            HttpHelper::setHttpResponse(500,'Server Error', true);
             exit();
         }
 
