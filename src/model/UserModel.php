@@ -1,10 +1,9 @@
 <?php
 
-namespace model;
+namespace Model;
 
 use Medoo\Medoo;
-use Exception;
-use utility\Middleware;
+use Utility\AccessControl;
 
 class UserModel
 {
@@ -17,104 +16,49 @@ class UserModel
         $this->dbConnection = $dbConnection;
     }
 
-    public function getUserByEmail(string $email): void
+    public function getUserByEmail(string $email): ?array
     {
-        echo $email.PHP_EOL;
-        try {
-            $results = $this->dbConnection->select(self::TABLE_NAME, "*", ["userEmail" => $email]);
-            if (empty($results)) {
-                Middleware::setHTTPResponse(400, "User Not Found", true);
-                exit();
-            }
-            Middleware::setHTTPResponse(200, "Success", false);
-            echo json_encode($results);
-        } catch (Exception $e) {
-            Middleware::setHTTPResponse(500, "Server Error", true);
-        }
+        return $this->dbConnection->select(self::TABLE_NAME, "*", ["userEmail" => $email]);
     }
 
-    public function addUser(): void
+    public function addUser($payload): void
     {
-        try {
-            $payload = json_decode(file_get_contents("php://input"), true);
-            if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
-                $userName = $payload['userName'];
-                $userEmail = $payload['userEmail'];
-                $userPassword = $payload['userPassword'];
-                $hashedPassword = Middleware::hashPassword($userPassword);
 
-                $this->dbConnection->insert(self::TABLE_NAME, [
-                    "userName" => $userName,
-                    "userEmail" => $userEmail,
-                    "userPassword" => $hashedPassword
-                ]);
-                Middleware::setHTTPResponse(200, "Success", true);
-            } else {
-                Middleware::setHTTPResponse(400, "Wrong Parameters", true);
-            }
-        } catch (Exception $e) {
-            Middleware::setHTTPResponse(500, "Server Error", true);
-        }
+        $userName = $payload['userName'];
+        $userEmail = $payload['userEmail'];
+        $userPassword = $payload['userPassword'];
+        $hashedPassword = AccessControl::hashPassword($userPassword);
+
+        $this->dbConnection->insert(self::TABLE_NAME, [
+            "userName" => $userName,
+            "userEmail" => $userEmail,
+            "userPassword" => $hashedPassword
+        ]);
     }
 
-    public function authenticateUser(): void
+    public function authenticateUser($payload): ?array
     {
-        try {
-            $payload = json_decode(file_get_contents("php://input"), true);
-            if (isset($payload['userEmail']) && isset($payload['userPassword'])) {
-                $userEmail = $payload['userEmail'];
-                $userPassword = $payload['userPassword'];
-
-                $results = $this->dbConnection->select(self::TABLE_NAME, "*", ["userEmail" => $userEmail]);
-                if (empty($results)) {
-                    throw new Exception("User not found", 404);
-                }
-                $hashedPassword = $results[0]['userPassword'];
-                if (Middleware::isValidPassword($userPassword, $hashedPassword)) {
-                    Middleware::setHTTPResponse(200, true, true);
-                } else {
-                    Middleware::setHTTPResponse(200, false, true);
-                }
-            } else {
-                Middleware::setHTTPResponse(400, "Wrong Parameters", true);
-            }
-        } catch (Exception $e) {
-            Middleware::setHTTPResponse(500, "Server Error", true);
-        }
+        $userEmail = $payload['userEmail'];
+        return $this->dbConnection->select(self::TABLE_NAME, "*", ["userEmail" => $userEmail]);
     }
 
-    public function updateUser(string $email): void
+    public function updateUser(string $email, $payload): void
     {
-        try {
-            $payload = json_decode(file_get_contents("php://input"), true);
-            if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
-                $userName = $payload['userName'];
-                $userEmail = $payload['userEmail'];
-                $userPassword = $payload['userPassword'];
-                $hashedPassword = Middleware::hashPassword($userPassword);
+        $userName = $payload['userName'];
+        $userEmail = $payload['userEmail'];
+        $userPassword = $payload['userPassword'];
+        $hashedPassword = AccessControl::hashPassword($userPassword);
 
-                $this->dbConnection->update(self::TABLE_NAME, [
-                    "userName" => $userName,
-                    "userEmail" => $userEmail,
-                    "userPassword" => $hashedPassword
-                ], ["userEmail" => $email]);
-                Middleware::setHTTPResponse(200, "Success", true);
-            } else {
-                Middleware::setHTTPResponse(400, "Wrong Parameters", true);
-            }
-        } catch (Exception $e) {
-            Middleware::setHTTPResponse(500, "Server Error", true);
-        }
+        $this->dbConnection->update(self::TABLE_NAME, [
+            "userName" => $userName,
+            "userEmail" => $userEmail,
+            "userPassword" => $hashedPassword
+        ], ["userEmail" => $email]);
     }
 
     public function deleteUser(string $email): void
     {
-        try {
-            $this->dbConnection->delete(self::TABLE_NAME, ["userEmail" => $email]);
-            Middleware::setHTTPResponse(200, "Success", true);
-        } catch (Exception $e) {
-            Middleware::setHTTPResponse(500, "Server error", true);
-        }
+        $this->dbConnection->delete(self::TABLE_NAME, ["userEmail" => $email]);
     }
 }
 

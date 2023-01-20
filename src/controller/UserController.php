@@ -1,9 +1,11 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
-use model\UserModel;
-use utility\Middleware;
+use Exception;
+use Model\UserModel;
+use Utility\AccessControl;
+use Utility\HttpHelper;
 use Medoo\Medoo;
 
 class UserController
@@ -20,46 +22,101 @@ class UserController
 
     public function addUser(): void
     {
-        // Validation des données reçues
-        $this->userModel->addUser();
-        // Renvoi de la réponse
+        $payload = json_decode(file_get_contents("php://input"), true);
+        if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
+            try {
+                $this->userModel->addUser($payload);
+                HttpHelper::setHttpResponse(200, "Success", true);
+            } catch (Exception $e) {
+                HttpHelper::setHttpResponse(500, "Server Error", true);
+            }
+        } else {
+            HttpHelper::setHttpResponse(400, "Wrong Parameters", true);
+        }
     }
 
     public function getUserByEmail($email): void
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Middleware::setHTTPResponse(400, 'Invalid Email', true);
+            HttpHelper::setHttpResponse(400, 'Invalid Email', true);
             exit();
         }
-        $this->userModel->getUserByEmail($email);
-        // Traitement des données et renvoi des réponses
+
+        try {
+            $results = $this->userModel->getUserByEmail($email);
+            if (empty($results)) {
+                HttpHelper::setHttpResponse(400, "User Not Found", true);
+                exit();
+            }
+            HttpHelper::setHttpResponse(200, "Success", false);
+            echo json_encode($results);
+        } catch (Exception $e) {
+            HttpHelper::setHttpResponse(500, "Server Error", true);
+        }
+
     }
 
     public function updateUser($email): void
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Middleware::setHTTPResponse(400, 'Invalid Email', true);
+            HttpHelper::setHttpResponse(400, 'Invalid Email', true);
             exit();
         }
-        // Validation des données reçues
-        $this->userModel->updateUser($email);
-        // Renvoi de la réponse
+
+        $payload = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
+            try {
+                $this->userModel->updateUser($email, $payload);
+                HttpHelper::setHttpResponse(200, "Success", true);
+            } catch (Exception $e) {
+                HttpHelper::setHttpResponse(500, "Server Error", true);
+            }
+        } else {
+            HttpHelper::setHttpResponse(400, "Wrong Parameters", true);
+        }
+
     }
 
     public function deleteUser($email): void
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            Middleware::setHTTPResponse(400, 'Invalid Email', true);
+            HttpHelper::setHttpResponse(400, 'Invalid Email', true);
             exit();
         }
-        $this->userModel->deleteUser($email);
-        // Renvoi de la réponse
+
+        try {
+            $this->userModel->deleteUser($email);
+            HttpHelper::setHttpResponse(200, "Success", true);
+        } catch (Exception $e) {
+            HttpHelper::setHttpResponse(500, "Server error", true);
+        }
+
     }
 
     public function authenticateUser(): void
     {
-        // Validation des données de connexion reçues
-        $this->userModel->authenticateUser();
-        // Traitement des données et renvoi des réponses
+        $payload = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($payload['userEmail']) && isset($payload['userPassword'])) {
+            try {
+                $results = $this->userModel->authenticateUser($payload);
+                if (empty($results)) {
+                    HttpHelper::setHttpResponse(404,'User Not Found', true);
+                    exit;
+                }
+                $userPassword = $payload['userPassword'];
+                $hashedPassword = $results[0]['userPassword'];
+                if (AccessControl::isValidPassword($userPassword, $hashedPassword)) {
+                    HttpHelper::setHttpResponse(200, true, true);
+                } else {
+                    HttpHelper::setHttpResponse(200, false, true);
+                }
+            } catch (Exception $e) {
+                HttpHelper::setHttpResponse(500, "Server Error", true);
+            }
+        } else {
+                HttpHelper::setHttpResponse(400, "Wrong Parameters", true);
+        }
     }
 }

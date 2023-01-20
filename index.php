@@ -4,10 +4,10 @@ require_once 'vendor/autoload.php';
 
 use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
-use controller\ReportController;
-use controller\UserController;
-use utility\DbConnector;
-use utility\Middleware;
+use Controller\ReportController;
+use Controller\UserController;
+use Utility\DbConnector;
+use Utility\HttpHelper;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -23,12 +23,12 @@ $requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
 $dbConnector = new DbConnector($dbType, $dbHost, $dbPort, $dbName, $dbUser, $dbPassword);
-$dbConnection = $dbConnector->dbConnection();
+$dbConnection = $dbConnector->dbConnect();
 
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     //REPORTS
     $r->addRoute('GET', '/reports', 'getLastReports');
-    $r->addRoute('POST', '/reports', 'addReports');
+    $r->addRoute('POST', '/reports', 'addReport');
     $r->addRoute('GET', '/reports/{id:\d+}', 'getReportById');
     $r->addRoute('DELETE', '/reports/{id:\d+}', 'deleteReport');
     $r->addRoute('GET', '/reports/{location}', 'getLastReportByLocation');
@@ -50,11 +50,11 @@ $controllers = [
 
 switch ($routeInfo[0]) {
     case Dispatcher::NOT_FOUND:
-        Middleware::setHTTPResponse(404, 'Route Not Found', true);
+        HttpHelper::setHttpResponse(404, 'Route Not Found', true);
         break;
     case Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
-        Middleware::setHTTPResponse(405, 'Method Not Allowed', true);
+        HttpHelper::setHttpResponse(405, 'Method Not Allowed', true);
         break;
     case Dispatcher::FOUND:
         $handler = $routeInfo[1];
