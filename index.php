@@ -23,12 +23,11 @@ $route = $_SERVER["REQUEST_URI"];
 $dbConnector = new DbConnector($dbType, $dbHost, $dbPort, $dbName, $dbUser, $dbPassword);
 $dbConnection = $dbConnector->dbConnect();
 
-
 $controllers = [
     'reports' => new ReportController($dbConnection),
     'users' => new UserController($dbConnection),
 ];
 
 $router = new Router();
-$routeInfo = $router->addRoute($requestMethod, $route);
+$routeInfo = $router->dispatch($requestMethod, $route);
 $router->trigRequest($routeInfo, $route, $controllers);

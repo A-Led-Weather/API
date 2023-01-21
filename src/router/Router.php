@@ -20,12 +20,18 @@ class Router
     private const UPDATE_USER = ['method' => 'PUT', 'uri' => '/users/{email}', 'request' => 'updateUser'];
     private const DELETE_USER = ['method' => 'DELETE', 'uri' => '/users/{email}', 'request' => 'deleteUser'];
     private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/users/login', 'request' => 'authenticateUser'];
+    private Dispatcher $dispatcher;
+
+    public function __construct()
+    {
+        $this->dispatcher = $this->addRoute();
+    }
 
 
-    public function addRoute(string $requestMethod, string $route): array
+    public function addRoute(): Dispatcher
     {
 
-        $dispatcher = simpleDispatcher(function (RouteCollector $r) {
+        return simpleDispatcher(function (RouteCollector $r) {
             $r->addRoute(self::GET_LAST_REPORTS['method'],
                 self::GET_LAST_REPORTS['uri'],
                 self::GET_LAST_REPORTS['request']);
@@ -60,7 +66,11 @@ class Router
                 self::AUTHENTICATE_USER['uri'],
                 self::AUTHENTICATE_USER['request']);
         });
-        return $dispatcher->dispatch($requestMethod, $route);
+    }
+
+    public function dispatch(string $requestMethod, string $route): array
+    {
+        return $this->dispatcher->dispatch($requestMethod, $route);
     }
 
     public function trigRequest(array $routeInfo, string $route, array $controllers): void
@@ -71,7 +81,6 @@ class Router
                 HttpHelper::setHttpResponse(404, 'Route Not Found', true);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                $allowedMethods = $routeInfo[1];
                 HttpHelper::setHttpResponse(405, 'Method Not Allowed', true);
                 break;
             case Dispatcher::FOUND:
