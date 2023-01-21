@@ -3,10 +3,10 @@
 namespace Controller;
 
 use Exception;
+use Medoo\Medoo;
 use Model\UserModel;
 use Utility\AccessControl;
 use Utility\HttpHelper;
-use Medoo\Medoo;
 
 class UserController
 {
@@ -102,7 +102,7 @@ class UserController
             try {
                 $results = $this->userModel->authenticateUser($payload);
                 if (empty($results)) {
-                    HttpHelper::setHttpResponse(404,'User Not Found', true);
+                    HttpHelper::setHttpResponse(404, 'User Not Found', true);
                     exit;
                 }
                 $userPassword = $payload['userPassword'];
@@ -116,7 +116,7 @@ class UserController
                 HttpHelper::setHttpResponse(500, "Server Error", true);
             }
         } else {
-                HttpHelper::setHttpResponse(400, "Wrong Parameters", true);
+            HttpHelper::setHttpResponse(400, "Wrong Parameters", true);
         }
     }
 }

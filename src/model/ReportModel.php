@@ -6,10 +6,9 @@ use Medoo\Medoo;
 
 class ReportModel
 {
-    private Medoo $dbConnection;
-    
     private const TABLE_NAME = 'REPORT';
     private const SERVER_TIME_ADJUST = "+1 hour";
+    private Medoo $dbConnection;
 
     public function __construct(Medoo $dbConnection)
     {
@@ -28,12 +27,12 @@ class ReportModel
 
     public function getReportsByLocationByTimeRange(string $location, int $limit): ?array
     {
-            return $this->dbConnection->select(self::TABLE_NAME, "*", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => $limit]);
+        return $this->dbConnection->select(self::TABLE_NAME, "*", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => $limit]);
     }
 
     public function getLastsReports(): ?array
     {
-            return $this->dbConnection->select(self::TABLE_NAME, "*",["ORDER" => ["reportId" => "DESC"], "LIMIT" => 10]);
+        return $this->dbConnection->select(self::TABLE_NAME, "*", ["ORDER" => ["reportId" => "DESC"], "LIMIT" => 10]);
     }
 
     public function addReport($payload): void

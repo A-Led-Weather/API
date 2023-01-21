@@ -7,9 +7,8 @@ use Utility\AccessControl;
 
 class UserModel
 {
-    private Medoo $dbConnection;
-
     private const TABLE_NAME = 'USER';
+    private Medoo $dbConnection;
 
     public function __construct(Medoo $dbConnection)
     {

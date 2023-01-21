@@ -29,7 +29,7 @@ class DbConnector
     public function dbConnect(): Medoo
     {
         try {
-            $dbConnection =  new Medoo([
+            $dbConnection = new Medoo([
                 'type' => $this->dbType,
                 'host' => $this->dbHost,
                 'database' => $this->dbName,
@@ -41,7 +41,7 @@ class DbConnector
 
             ]);
         } catch (Exception $e) {
-            HttpHelper::setHttpResponse(500,'Server Error', true);
+            HttpHelper::setHttpResponse(500, 'Server Error', true);
             exit();
         }
 

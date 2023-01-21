@@ -3,18 +3,17 @@
 namespace Controller;
 
 use Exception;
+use Medoo\Medoo;
 use Model\ReportModel;
 use Utility\HttpHelper;
-use Medoo\Medoo;
 
 class ReportController
 {
 
-    private Medoo $dbConnection;
-    private ReportModel $reportModel;
     private const HOUR_LIMIT = 60;
     private const DAY_LIMIT = 1440;
-
+    private Medoo $dbConnection;
+    private ReportModel $reportModel;
 
     public function __construct(Medoo $dbConnection)
     {
