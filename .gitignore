@@ -2,11 +2,8 @@
 .DS_STORE
 /vendor/
 composer
-composer.json
-composer.lock
 .env
 /swagger
 /.htaccess
 gen
-initializeDB.sql
 sandbox.php
