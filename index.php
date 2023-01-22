@@ -17,6 +17,8 @@ $dbUser = $_ENV['DB_USER'];
 $dbPassword = $_ENV['DB_PASSWORD'];
 $dbPort = $_ENV['DB_PORT'];
 
+$jwtKey = $_ENV['JWT_KEY'];
+
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
@@ -25,7 +27,7 @@ $dbConnection = $dbConnector->dbConnect();
 
 $controllers = [
     'reports' => new ReportController($dbConnection),
-    'users' => new UserController($dbConnection),
+    'users' => new UserController($dbConnection, $jwtKey),
 ];
 
 $router = new Router();

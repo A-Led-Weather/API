@@ -20,6 +20,7 @@ class Router
     private const UPDATE_USER = ['method' => 'PUT', 'uri' => '/users/{email}', 'request' => 'updateUser'];
     private const DELETE_USER = ['method' => 'DELETE', 'uri' => '/users/{email}', 'request' => 'deleteUser'];
     private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/users/login', 'request' => 'authenticateUser'];
+    private const CREATE_JWT = ['method' => 'POST', 'uri'=>'/users/token', 'request' => 'createJWT'];
     private Dispatcher $dispatcher;
 
     public function __construct()
@@ -28,7 +29,7 @@ class Router
     }
 
 
-    public function addRoute(): Dispatcher
+    private function addRoute(): Dispatcher
     {
 
         return simpleDispatcher(function (RouteCollector $r) {
@@ -65,6 +66,9 @@ class Router
             $r->addRoute(self::AUTHENTICATE_USER['method'],
                 self::AUTHENTICATE_USER['uri'],
                 self::AUTHENTICATE_USER['request']);
+            $r->addRoute(self::CREATE_JWT['method'],
+                self::CREATE_JWT['uri'],
+                self::CREATE_JWT['request']);
         });
     }
 
@@ -78,10 +82,10 @@ class Router
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
-                HttpHelper::setHttpResponse(404, 'Route Not Found', true);
+                HttpHelper::setResponse(404, 'Route Not Found', true);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                HttpHelper::setHttpResponse(405, 'Method Not Allowed', true);
+                HttpHelper::setResponse(405, 'Method Not Allowed', true);
                 break;
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
@@ -91,7 +95,7 @@ class Router
                 call_user_func_array([$controller, $handler], $vars);
                 break;
             default:
-                HttpHelper::setHttpResponse(400, 'Unexpected Error', true);
+                HttpHelper::setResponse(400, 'Unexpected Error', true);
         }
     }
 }

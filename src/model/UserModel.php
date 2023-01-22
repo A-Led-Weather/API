@@ -3,7 +3,7 @@
 namespace Model;
 
 use Medoo\Medoo;
-use Utility\AccessControl;
+use Utility\AuthHelper;
 
 class UserModel
 {
@@ -26,7 +26,7 @@ class UserModel
         $userName = $payload['userName'];
         $userEmail = $payload['userEmail'];
         $userPassword = $payload['userPassword'];
-        $hashedPassword = AccessControl::hashPassword($userPassword);
+        $hashedPassword = AuthHelper::hashPassword($userPassword);
 
         $this->dbConnection->insert(self::TABLE_NAME, [
             "userName" => $userName,
@@ -35,10 +35,14 @@ class UserModel
         ]);
     }
 
-    public function authenticateUser($payload): ?array
+    public function addJWT($jwt, $payload): void
     {
-        $userEmail = $payload['userEmail'];
-        return $this->dbConnection->select(self::TABLE_NAME, "*", ["userEmail" => $userEmail]);
+
+        $email = $payload['userEmail'];
+
+        $this->dbConnection->update(self::TABLE_NAME, [
+            "token" => $jwt,
+        ], ["userEmail" => $email]);
     }
 
     public function updateUser(string $email, $payload): void
@@ -46,7 +50,7 @@ class UserModel
         $userName = $payload['userName'];
         $userEmail = $payload['userEmail'];
         $userPassword = $payload['userPassword'];
-        $hashedPassword = AccessControl::hashPassword($userPassword);
+        $hashedPassword = AuthHelper::hashPassword($userPassword);
 
         $this->dbConnection->update(self::TABLE_NAME, [
             "userName" => $userName,

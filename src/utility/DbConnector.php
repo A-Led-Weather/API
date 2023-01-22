@@ -2,9 +2,9 @@
 
 namespace Utility;
 
-use Exception;
 use Medoo\Medoo;
 use PDO;
+use PDOException;
 
 
 class DbConnector
@@ -40,8 +40,8 @@ class DbConnector
                 'error' => PDO::ERRMODE_SILENT,
 
             ]);
-        } catch (Exception $e) {
-            HttpHelper::setHttpResponse(500, 'Server Error', true);
+        } catch (PDOException $e) {
+            HttpHelper::setResponse(500, 'Server Error', true);
             exit();
         }
 
