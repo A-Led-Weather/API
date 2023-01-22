@@ -1,9 +1,8 @@
 .idea
 .DS_STORE
 /vendor/
-composer
 .env
 /swagger
 /.htaccess
 gen
-sandbox.php
+backup
