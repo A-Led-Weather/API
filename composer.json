@@ -6,7 +6,12 @@
         "firebase/php-jwt": "^6.3",
         "catfan/medoo": "^2.1"
     },
-    "autoload": {
-      "classmap": ["./"]
+  "autoload": {
+    "psr-4": {
+      "Controller\\": "src/controller",
+      "Model\\": "src/model",
+      "Router\\": "src/router",
+      "Utility\\": "src/utility"
     }
+  }
 }
