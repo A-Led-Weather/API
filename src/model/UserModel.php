@@ -63,6 +63,11 @@ class UserModel
     {
         $this->dbConnection->delete(self::TABLE_NAME, ["userEmail" => $email]);
     }
+
+    public function getEmailFromToken(string $jwt): array
+    {
+        return $this->dbConnection->select(self::TABLE_NAME, (array)"userEmail", ["token" => $jwt]);
+    }
 }
 
 

@@ -27,7 +27,7 @@ abstract class AuthHelper
         }
     }
 
-    public static function createJWT($email, $jwtKey): string
+    public static function encodeJWT($email, $jwtKey): string
     {
         $issuedAt = time();
         $key = $jwtKey;
@@ -39,16 +39,15 @@ abstract class AuthHelper
         return JWT::encode($payload, $key, $alg);
     }
 
-    public static function decodeJWT($jwtKey): array
+    public static function authenticateRequestToken(string $jwtKey, string $jwt): void
     {
-        $jwt = HttpHelper::getAuthHeader();
-        $decode = JWT::decode($jwt[1], new Key($jwtKey, 'HS256'));
-        return (array) $decode;
+        self::decodeJWT($jwtKey, $jwt);
     }
 
-    public static function authenticateJWT(string $decodedJWT, $email): bool
+    private static function decodeJWT($jwtKey, $jwt): array
     {
-        return $decodedJWT['userid'] === $email;
+        $decode = JWT::decode($jwt, new Key($jwtKey, 'HS256'));
+        return (array)$decode;
     }
 
 }

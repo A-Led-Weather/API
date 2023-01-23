@@ -12,9 +12,8 @@ abstract class HttpHelper
         }
     }
 
-    public static function getAuthHeader(): array|false
+    public static function getAuthHeaderValue(array $headers): string|false
     {
-        $headers = $_SERVER;
         if (isset($headers['Authorization'])) {
             $bearerToken = $headers['Authorization'];
             return explode(' ', $bearerToken)[1];

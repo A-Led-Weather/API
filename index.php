@@ -19,6 +19,8 @@ $dbPort = $_ENV['DB_PORT'];
 
 $jwtKey = $_ENV['JWT_KEY'];
 
+$headers = apache_request_headers();
+
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
 
@@ -26,8 +28,8 @@ $dbConnector = new DbConnector($dbType, $dbHost, $dbPort, $dbName, $dbUser, $dbP
 $dbConnection = $dbConnector->dbConnect();
 
 $controllers = [
-    'reports' => new ReportController($dbConnection),
-    'users' => new UserController($dbConnection, $jwtKey),
+    'reports' => new ReportController($dbConnection, $jwtKey, $headers),
+    'users' => new UserController($dbConnection, $jwtKey, $headers),
 ];
 
 $router = new Router();

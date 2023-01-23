@@ -20,7 +20,8 @@ class Router
     private const UPDATE_USER = ['method' => 'PUT', 'uri' => '/users/{email}', 'request' => 'updateUser'];
     private const DELETE_USER = ['method' => 'DELETE', 'uri' => '/users/{email}', 'request' => 'deleteUser'];
     private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/users/login', 'request' => 'authenticateUser'];
-    private const CREATE_JWT = ['method' => 'POST', 'uri'=>'/users/token', 'request' => 'createJWT'];
+    private const CREATE_JWT = ['method' => 'POST', 'uri' => '/users/token', 'request' => 'createToken'];
+
     private Dispatcher $dispatcher;
 
     public function __construct()
