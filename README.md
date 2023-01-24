@@ -15,7 +15,7 @@ It also stands as Aled-weather webapp backend by managing user registration, aut
 
 ## Installation
 
-In production environment, this project is hosted on an apache http webserver using a virtual host and htaccess redirection to index.php.
+In production environment, this project is hosted on an Apache http webserver.
 But you can alternatively use php built-in server for a simple test and development context :
 
 - Clone the repository to your machine
