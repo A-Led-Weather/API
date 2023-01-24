@@ -1,6 +1,7 @@
 # A-LED Weather API
 
-This API manage the import of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. It also stands as Aled-weather webapp backend by managing user registration, authentification, token creation. 
+This API manage the import of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. 
+It also stands as Aled-weather webapp backend by managing user registration, authentification, token creation. 
 
 ## Features
 
@@ -14,10 +15,11 @@ This API manage the import of temperature et humidity readings of an HTU-21 modu
 
 ## Installation
 
-In production environment, this project is hosted on a apache http webserver using a virtual host and htaccess redirection to index.php.
+In production environment, this project is hosted on an apache http webserver using a virtual host and htaccess redirection to index.php.
+But you can alternatively use php built-in server for a simple test and development context :
 
 - Clone the repository to your machine
-- Install PHP 8.2.1.
+- Install php 8.2.1.
 - Set the "cgi.fix_pathinfo" to 0 in your php.ini file to avoid route interpretation
 - Install dependencies using `composer install`
 - Install MariaDb
