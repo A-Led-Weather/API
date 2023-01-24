@@ -25,6 +25,6 @@ services:
       MYSQL_DATABASE: weather_reports
     volumes:
       - db_data:/var/lib/mysql
-      - ./scripts/initializeDB.sql:/docker-entrypoint-initdb.d//initializeDB.sql
+      - ./scripts/initialize_db_insert_data_set.sql:/docker-entrypoint-initdb.d//initialize_db_insert_data_set.sql
 volumes:
   db_data:
