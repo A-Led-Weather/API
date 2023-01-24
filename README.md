@@ -1,5 +1,7 @@
 # A-LED Weather API
 
+![Aled logo](logo.png)
+
 This API manage the import of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. 
 It also stands as Aled-weather webapp backend by managing user registration, authentification, token creation. 
 
@@ -30,7 +32,7 @@ But you can alternatively use php built-in server for a simple test and developm
 ### With Docker
 
 - Set up your .env file variables accordingly to your docker-compose.yaml file.
-- use the command `docker compose up`
+- use the command `docker compose up` from your application directory
 - RUN !
 
 ## Usage
