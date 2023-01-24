@@ -27,7 +27,7 @@ In production environment, this project is hosted on a apache http webserver usi
 
 ### With Docker
 
-- Set up your .env file accordingly to your docker-compose.yaml file.
+- Set up your .env file variables accordingly to your docker-compose.yaml file.
 - use the command `docker compose up`
 - RUN !
 
