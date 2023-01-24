@@ -19,8 +19,8 @@ class Router
     private const GET_USER_BY_EMAIL = ['method' => 'GET', 'uri' => '/users/{email}', 'request' => 'getUserByEmail'];
     private const UPDATE_USER = ['method' => 'PUT', 'uri' => '/users/{email}', 'request' => 'updateUser'];
     private const DELETE_USER = ['method' => 'DELETE', 'uri' => '/users/{email}', 'request' => 'deleteUser'];
-    private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/users/login', 'request' => 'authenticateUser'];
-    private const CREATE_JWT = ['method' => 'POST', 'uri' => '/users/token', 'request' => 'createToken'];
+    private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/login', 'request' => 'authenticateUser'];
+    private const CREATE_JWT = ['method' => 'POST', 'uri' => '/token', 'request' => 'createToken'];
 
     private Dispatcher $dispatcher;
 
@@ -91,7 +91,7 @@ class Router
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
-                $basePath = explode("/", $route);
+                $basePath = $route == '/token' ? ['', 'users'] : explode("/", $route);
                 $controller = $controllers[$basePath[1]];
                 call_user_func_array([$controller, $handler], $vars);
                 break;
