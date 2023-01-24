@@ -2,7 +2,7 @@
 .DS_STORE
 /vendor/
 .env
-/swagger
+openapi
 /.htaccess
 gen
 backup
