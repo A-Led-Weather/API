@@ -1,13 +1,13 @@
 # A-LED Weather API
 
-This API allows for the creation and retrieval of temperature readings sent by ESP8266 01S modules with an HTU21 probe.
+This API support the process of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. It also handle Aled webapp backend by managing user registration and authentification, token creation. First you need to create an user account by using addUser request, then create a token for your account with createToken request which returns a jwt to include in requiring requests headers.
 
 ## Features
 
-- Creation of temperature readings in the database
-- Display of readings by ID, location, ESP module, hour and day
+- Creation of temperature reports in the database
+- Display of reports by ID, location, device, hourly and daily
 - Creation of JWT tokens for authentication of requests
-- Retrieval of the list of modules and available locations
+- Retrieval of the list of devices and available locations
 - User registration with name, email, and password
 
 ## Installation
@@ -19,7 +19,7 @@ This API allows for the creation and retrieval of temperature readings sent by E
 
 ## Usage
 
-Consult the API documentation to learn how to use the different routes and features : http://194.31.150.69:8888
+Consult the API documentation to learn how to use the different routes and features : https://aled-weather.fr:8888/
 
 ## Contribution
 
