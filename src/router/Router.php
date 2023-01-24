@@ -91,7 +91,7 @@ class Router
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
-                $basePath = $route == '/token' ? ['', 'users'] : explode("/", $route);
+                $basePath = $route == '/token' || $route == "/login" ? ['', 'users'] : explode("/", $route);
                 $controller = $controllers[$basePath[1]];
                 call_user_func_array([$controller, $handler], $vars);
                 break;
