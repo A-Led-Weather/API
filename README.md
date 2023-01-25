@@ -2,7 +2,7 @@
 
 ![Aled logo](logo.png)
 
-This API manage the import of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. 
+This API manages the import of temperature et humidity readings of an HTU-21 module sent by an ESP8266 01-S. 
 It also stands as Aled-weather webapp backend by managing user registration, authentification, token creation. 
 
 ## Features
