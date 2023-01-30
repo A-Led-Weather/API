@@ -7,7 +7,7 @@ It also stands as Aled-weather webapp backend by managing user registration, aut
 
 ## Features
 
-- Creation of temperature reports in the database
+- Creation of temperature/humidity reports in the database
 - Display of reports by ID, location, period of time
 - Retrieval of the list of available locations
 - User registration with name, email, and password
