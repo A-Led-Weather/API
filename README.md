@@ -26,13 +26,13 @@ But you can alternatively use php built-in server for a simple test and developm
 - Install dependencies using `composer install`
 - Install MariaDb
 - Configure the database connection and secret JWT encoding key in the .env file
-- launch the initialize_db_insert_data_set.sql script into your database (you can remove the dataset INSERT part as it stands for test purpose)
+- Launch the initialize_db_insert_data_set.sql script into your database (you can remove the dataset INSERT part as it stands for test purpose)
 - Start the PHP server using the command `php -S 0.0.0.0:8080 -t path_to_your_application_root_folder -c path_to_your_php.ini_file ./index.php` 
 
 ### With Docker
 
 - Set up your .env file variables accordingly to your docker-compose.yaml file.
-- use the command `docker compose up` from your application directory
+- Use the command `docker compose up` from your application directory
 - RUN !
 
 ## Usage
