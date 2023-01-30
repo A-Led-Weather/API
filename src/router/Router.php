@@ -2,6 +2,7 @@
 
 namespace Router;
 
+use Exception;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use Utility\HttpHelper;
@@ -21,6 +22,12 @@ class Router
     private const DELETE_USER = ['method' => 'DELETE', 'uri' => '/users/{email}', 'request' => 'deleteUser'];
     private const AUTHENTICATE_USER = ['method' => 'POST', 'uri' => '/login', 'request' => 'authenticateUser'];
     private const CREATE_JWT = ['method' => 'POST', 'uri' => '/token', 'request' => 'createToken'];
+    private const GET_LOCATIONS = ['method' => 'GET', 'uri' => '/locations', 'request' => 'getLocations'];
+    private const ADD_LOCATION = ['method' => 'POST', 'uri' => '/locations', 'request' => 'addLocation'];
+    private const GET_LOCATION_BY_NAME = ['method' => 'GET', 'uri' => '/locations/{location}', 'request' => 'getLocationByName'];
+    private const UPDATE_LOCATION = ['method' => 'PUT', 'uri' => '/locations/{location}', 'request' => 'updateLocation'];
+    private const DELETE_LOCATION = ['method' => 'DELETE', 'uri' => '/locations/{location}', 'request' => 'deleteLocation'];
+
 
     private Dispatcher $dispatcher;
 
@@ -70,6 +77,21 @@ class Router
             $r->addRoute(self::CREATE_JWT['method'],
                 self::CREATE_JWT['uri'],
                 self::CREATE_JWT['request']);
+            $r->addRoute(self::GET_LOCATIONS['method'],
+                self::GET_LOCATIONS['uri'],
+                self::GET_LOCATIONS['request']);
+            $r->addRoute(self::ADD_LOCATION['method'],
+                self::ADD_LOCATION['uri'],
+                self::ADD_LOCATION['request']);
+            $r->addRoute(self::GET_LOCATION_BY_NAME['method'],
+                self::GET_LOCATION_BY_NAME['uri'],
+                self::GET_LOCATION_BY_NAME['request']);
+            $r->addRoute(self::UPDATE_LOCATION['method'],
+                self::UPDATE_LOCATION['uri'],
+                self::UPDATE_LOCATION['request']);
+            $r->addRoute(self::DELETE_LOCATION['method'],
+                self::DELETE_LOCATION['uri'],
+                self::DELETE_LOCATION['request']);
         });
     }
 
