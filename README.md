@@ -8,20 +8,20 @@ It also stands as Aled-weather webapp backend by managing user registration, aut
 ## Features
 
 - Creation of temperature reports in the database
-- Display of reports by ID, device, location, hourly and daily
-- Creation of JWT tokens for authentication of requests
-- Retrieval of the list of devices and available locations
+- Display of reports by ID, location, period of time
+- Retrieval of the list of available locations
 - User registration with name, email, and password
 - User authentification
-- General CRUD operations with USER, REPORT, DEVICE, LOCATION data
+- Creation of JWT tokens for registered users
+- General CRUD operations with Reports, Users, and Locations data
 
 ## Installation
 
-In production environment, this project is hosted on an Apache http webserver.
+In production environment, this project is configured for an Apache http server.
 But you can alternatively use php built-in server for a simple test and development context :
 
 - Clone the repository to your machine
-- Install php 8.2.1.
+- Install PHP 8.2.1.
 - Set the "cgi.fix_pathinfo" to 0 in your php.ini file to avoid route interpretation
 - Install dependencies using `composer install`
 - Install MariaDb
@@ -43,4 +43,6 @@ Consult the API documentation to learn how to use the different routes and featu
 
 ## Contribution
 
-All contributions are welcome! For bugs or feature requests, please open an issue. For direct contributions, please send a pull request.
+This is a school project, so it is very improvable.
+
+So all advices and contributions are welcome! For bugs or feature requests, please open an issue. For direct contributions, please send a pull request.
