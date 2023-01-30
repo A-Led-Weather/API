@@ -43,6 +43,6 @@ Consult the API documentation to learn how to use the different routes and featu
 
 ## Contribution
 
-This is a school project, so it is very improvable.
+This is a school project, it is very improvable.
 
-So all advices and contributions are welcome! For bugs or feature requests, please open an issue. For direct contributions, please send a pull request.
+So all advices and contributions are welcome ! For bugs or feature requests, please open an issue. For direct contributions, please send a pull request.
