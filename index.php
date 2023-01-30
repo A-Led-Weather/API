@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
+use Controller\LocationController;
 use Controller\ReportController;
 use Controller\UserController;
 use Router\Router;
@@ -30,6 +31,7 @@ $dbConnection = $dbConnector->dbConnect();
 $controllers = [
     'reports' => new ReportController($dbConnection, $jwtKey, $headers),
     'users' => new UserController($dbConnection, $jwtKey, $headers),
+    'locations' => new LocationController($dbConnection, $jwtKey, $headers)
 ];
 
 $router = new Router();
