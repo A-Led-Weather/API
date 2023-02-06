@@ -36,6 +36,14 @@ But you can alternatively use php built-in server for a simple test and developm
 - Use the command `docker compose up` from your application directory
 - RUN !
 
+### Dependencies and libraries
+
+- vlucas/phpdotenv : Dotenv is a library that loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
+- nikic/fast-route : Fast request router for PHP
+- firebase/php-jwt : A simple library to encode and decode JSON Web Tokens (JWT) in PHP.
+- catfan/medoo : Medoo is a lightweight PHP database framework to accelerate development.
+
+
 ## Usage
 
 First you need to create a user account by using addUser request, then create a token for your account with createToken request which returns a jwt to include in requiring requests headers.
