@@ -27,8 +27,6 @@ class Router
     private const GET_LOCATION_BY_NAME = ['method' => 'GET', 'uri' => '/locations/{location}', 'request' => 'getLocationByName'];
     private const UPDATE_LOCATION = ['method' => 'PUT', 'uri' => '/locations/{location}', 'request' => 'updateLocation'];
     private const DELETE_LOCATION = ['method' => 'DELETE', 'uri' => '/locations/{location}', 'request' => 'deleteLocation'];
-
-
     private Dispatcher $dispatcher;
 
     public function __construct()
