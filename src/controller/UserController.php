@@ -32,6 +32,22 @@ class UserController
     public function addUser(): void
     {
         $payload = json_decode(file_get_contents("php://input"), true);
+
+        if (!filter_var($payload['userEmail'], FILTER_VALIDATE_EMAIL)) {
+            HttpHelper::setResponse(400, 'Invalid Email', true);
+            exit();
+        }
+
+        try {
+            $results = $this->userModel->getUserByEmail($payload['userEmail']);
+            if (!empty($results)) {
+                HttpHelper::setResponse(401, "Email Already Taken", true);
+                exit();
+            }
+        } catch (Exception $e) {
+            HttpHelper::setResponse(500, "Server Error", true);
+        }
+
         if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
             try {
                 $this->userModel->addUser($payload);
@@ -44,26 +60,25 @@ class UserController
         }
     }
 
-    public function updateUser($email): void
+    public function getUserByEmail($email): void
     {
         $this->authenticateRequest();
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            HttpHelper::setResponse(400, 'Invalid Or Missing Parameters', true);
+            HttpHelper::setResponse(400, 'Invalid Email', true);
             exit();
         }
 
-        $payload = json_decode(file_get_contents("php://input"), true);
-
-        if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
-            try {
-                $this->userModel->updateUser($email, $payload);
-                HttpHelper::setResponse(200, "User Updated", true);
-            } catch (Exception $e) {
-                HttpHelper::setResponse(500, "Server Error", true);
+        try {
+            $results = $this->userModel->getUserByEmail($email);
+            if (empty($results)) {
+                HttpHelper::setResponse(404, "User Not Found", true);
+                exit();
             }
-        } else {
-            HttpHelper::setResponse(400, "Invalid Or Missing Parameters", true);
+            HttpHelper::setResponse(200, "Success", false);
+            echo json_encode($results);
+        } catch (Exception $e) {
+            HttpHelper::setResponse(500, "Server Error", true);
         }
 
     }
@@ -81,6 +96,40 @@ class UserController
             HttpHelper::setResponse(403, "Token Doesn't match any profile", true);
             exit;
         }
+    }
+
+    public function updateUser($email): void
+    {
+        $this->authenticateRequest();
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            HttpHelper::setResponse(400, 'Invalid Or Missing Parameters', true);
+            exit();
+        }
+
+        $payload = json_decode(file_get_contents("php://input"), true);
+
+        try {
+            $results = $this->userModel->getUserByEmail($payload['userEmail']);
+            if (!empty($results)) {
+                HttpHelper::setResponse(401, "Email Already Taken", true);
+                exit();
+            }
+        } catch (Exception $e) {
+            HttpHelper::setResponse(500, "Server Error", true);
+        }
+
+        if (isset($payload['userName']) && isset($payload['userEmail']) && isset($payload['userPassword'])) {
+            try {
+                $this->userModel->updateUser($email, $payload);
+                HttpHelper::setResponse(200, "User Updated", true);
+            } catch (Exception $e) {
+                HttpHelper::setResponse(500, "Server Error", true);
+            }
+        } else {
+            HttpHelper::setResponse(400, "Invalid Or Missing Parameters", true);
+        }
+
     }
 
     public function deleteUser($email): void
@@ -103,7 +152,6 @@ class UserController
 
     public function createToken(): void
     {
-
         $payload = json_decode(file_get_contents("php://input"), true);
 
         if ($this->authenticateUser(true)) {
@@ -154,29 +202,6 @@ class UserController
         } else {
             HttpHelper::setResponse(400, "Invalid or Missing Parameters", true);
         }
-    }
-
-    public function getUserByEmail($email): void
-    {
-        $this->authenticateRequest();
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            HttpHelper::setResponse(400, 'Invalid Email', true);
-            exit();
-        }
-
-        try {
-            $results = $this->userModel->getUserByEmail($email);
-            if (empty($results)) {
-                HttpHelper::setResponse(404, "User Not Found", true);
-                exit();
-            }
-            HttpHelper::setResponse(200, "Success", false);
-            echo json_encode($results);
-        } catch (Exception $e) {
-            HttpHelper::setResponse(500, "Server Error", true);
-        }
-
     }
 
 
