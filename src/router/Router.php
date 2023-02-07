@@ -27,9 +27,15 @@ class Router
     private const GET_LOCATION_BY_NAME = ['method' => 'GET', 'uri' => '/locations/{location}', 'request' => 'getLocationByName'];
     private const UPDATE_LOCATION = ['method' => 'PUT', 'uri' => '/locations/{location}', 'request' => 'updateLocation'];
     private const DELETE_LOCATION = ['method' => 'DELETE', 'uri' => '/locations/{location}', 'request' => 'deleteLocation'];
+    private const GET_DEVICES = ['method' => 'GET', 'uri' => '/devices', 'request' => 'getDevices'];
+    private const ADD_DEVICE = ['method' => 'POST', 'uri' => '/devices', 'request' => 'addDevice'];
+    private const GET_DEVICE_BY_ID = ['method' => 'GET', 'uri' => '/devices/{id:\d+}', 'request' => 'getDeviceById'];
+    private const UPDATE_DEVICE = ['method' => 'PUT', 'uri' => '/devices/{id:\d+}', 'request' => 'updateDevice'];
+    private const DELETE_DEVICE = ['method' => 'DELETE', 'uri' => '/devices/{id:\d+}', 'request' => 'deleteDevice'];
     private const OPTIONS_PRE_FLIGHT_CASE_1 = ['method' => 'OPTIONS', 'uri' => '/{any}', 'request' => 'options'];
     private const OPTIONS_PRE_FLIGHT_CASE_2 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}', 'request' => 'options'];
     private const OPTIONS_PRE_FLIGHT_CASE_3 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}/{any3}', 'request' => 'options'];
+
     private Dispatcher $dispatcher;
 
     public function __construct()
@@ -93,6 +99,21 @@ class Router
             $r->addRoute(self::DELETE_LOCATION['method'],
                 self::DELETE_LOCATION['uri'],
                 self::DELETE_LOCATION['request']);
+            $r->addRoute(self::GET_DEVICES['method'],
+                self::GET_DEVICES['uri'],
+                self::GET_DEVICES['request']);
+            $r->addRoute(self::ADD_DEVICE['method'],
+                self::ADD_DEVICE['uri'],
+                self::ADD_DEVICE['request']);
+            $r->addRoute(self::GET_DEVICE_BY_ID['method'],
+                self::GET_DEVICE_BY_ID['uri'],
+                self::GET_DEVICE_BY_ID['request']);
+            $r->addRoute(self::UPDATE_DEVICE['method'],
+                self::UPDATE_DEVICE['uri'],
+                self::UPDATE_DEVICE['request']);
+            $r->addRoute(self::DELETE_DEVICE['method'],
+                self::DELETE_DEVICE['uri'],
+                self::DELETE_DEVICE['request']);
             $r->addRoute(self::OPTIONS_PRE_FLIGHT_CASE_1['method'],
                 self::OPTIONS_PRE_FLIGHT_CASE_1['uri'],
                 self::OPTIONS_PRE_FLIGHT_CASE_1['request']);
