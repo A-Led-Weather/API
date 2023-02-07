@@ -27,8 +27,10 @@ class Router
     private const GET_LOCATION_BY_NAME = ['method' => 'GET', 'uri' => '/locations/{location}', 'request' => 'getLocationByName'];
     private const UPDATE_LOCATION = ['method' => 'PUT', 'uri' => '/locations/{location}', 'request' => 'updateLocation'];
     private const DELETE_LOCATION = ['method' => 'DELETE', 'uri' => '/locations/{location}', 'request' => 'deleteLocation'];
+    private const OPTIONS_PRE_FLIGHT_CASE_1 = ['method' => 'OPTIONS', 'uri' => '/{any}', 'request' => 'options'];
+    private const OPTIONS_PRE_FLIGHT_CASE_2 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}', 'request' => 'options'];
+    private const OPTIONS_PRE_FLIGHT_CASE_3 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}/{any3}', 'request' => 'options'];
     private Dispatcher $dispatcher;
-
     public function __construct()
     {
         $this->dispatcher = $this->addRoute();
@@ -90,6 +92,15 @@ class Router
             $r->addRoute(self::DELETE_LOCATION['method'],
                 self::DELETE_LOCATION['uri'],
                 self::DELETE_LOCATION['request']);
+            $r->addRoute(self::OPTIONS_PRE_FLIGHT_CASE_1['method'],
+                self::OPTIONS_PRE_FLIGHT_CASE_1['uri'],
+                self::OPTIONS_PRE_FLIGHT_CASE_1['request']);
+            $r->addRoute(self::OPTIONS_PRE_FLIGHT_CASE_2['method'],
+                self::OPTIONS_PRE_FLIGHT_CASE_2['uri'],
+                self::OPTIONS_PRE_FLIGHT_CASE_2['request']);
+            $r->addRoute(self::OPTIONS_PRE_FLIGHT_CASE_3['method'],
+                self::OPTIONS_PRE_FLIGHT_CASE_3['uri'],
+                self::OPTIONS_PRE_FLIGHT_CASE_3['request']);
         });
     }
 
@@ -111,6 +122,10 @@ class Router
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
+                if ($handler == 'options') {
+                    HttpHelper::setResponse(200, 'Welcome to the API', true);
+                    exit;
+                }
                 $basePath = $route == '/token' || $route == "/login" ? ['', 'users'] : explode("/", $route);
                 $controller = $controllers[$basePath[1]];
                 call_user_func_array([$controller, $handler], $vars);
