@@ -37,5 +37,5 @@ $controllers = [
 ];
 
 $router = new Router();
-$routeInfo = $router->dispatch($requestMethod, $route);
-$router->trigRequest($routeInfo, $route, $controllers);
+$routeComponents = $router->dispatch($requestMethod, $route);
+$router->trigRequest($routeComponents, $route, $controllers);

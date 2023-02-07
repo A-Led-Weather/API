@@ -31,6 +31,7 @@ class Router
     private const OPTIONS_PRE_FLIGHT_CASE_2 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}', 'request' => 'options'];
     private const OPTIONS_PRE_FLIGHT_CASE_3 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}/{any3}', 'request' => 'options'];
     private Dispatcher $dispatcher;
+
     public function __construct()
     {
         $this->dispatcher = $this->addRoute();
@@ -109,10 +110,10 @@ class Router
         return $this->dispatcher->dispatch($requestMethod, $route);
     }
 
-    public function trigRequest(array $routeInfo, string $route, array $controllers): void
+    public function trigRequest(array $routeComponents, string $route, array $controllers): void
     {
 
-        switch ($routeInfo[0]) {
+        switch ($routeComponents[0]) {
             case Dispatcher::NOT_FOUND:
                 HttpHelper::setResponse(404, 'Route Not Found', true);
                 break;
@@ -120,8 +121,8 @@ class Router
                 HttpHelper::setResponse(405, 'Method Not Allowed', true);
                 break;
             case Dispatcher::FOUND:
-                $handler = $routeInfo[1];
-                $vars = $routeInfo[2];
+                $handler = $routeComponents[1];
+                $vars = $routeComponents[2];
                 if ($handler == 'options') {
                     HttpHelper::setResponse(200, 'Welcome to the API', true);
                     exit;
