@@ -22,15 +22,12 @@ class UserModel
 
     public function addUser($payload): void
     {
-
-        $userName = $payload['userName'];
-        $userEmail = $payload['userEmail'];
         $userPassword = $payload['userPassword'];
         $hashedPassword = AuthHelper::hashPassword($userPassword);
 
         $this->dbConnection->insert(self::TABLE_NAME, [
-            "userName" => $userName,
-            "userEmail" => $userEmail,
+            "userName" => $payload['userName'],
+            "userEmail" => $payload['userEmail'],
             "userPassword" => $hashedPassword
         ]);
     }
@@ -47,14 +44,12 @@ class UserModel
 
     public function updateUser(string $email, $payload): void
     {
-        $userName = $payload['userName'];
-        $userEmail = $payload['userEmail'];
         $userPassword = $payload['userPassword'];
         $hashedPassword = AuthHelper::hashPassword($userPassword);
 
         $this->dbConnection->update(self::TABLE_NAME, [
-            "userName" => $userName,
-            "userEmail" => $userEmail,
+            "userName" => $payload['userName'],
+            "userEmail" => $payload['userEmail'],
             "userPassword" => $hashedPassword
         ], ["userEmail" => $email]);
     }

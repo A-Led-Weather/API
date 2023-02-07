@@ -26,27 +26,19 @@ class LocationModel
 
     public function addLocation($payload): void
     {
-        $locationName = $payload['locationName'];
-        $latitude = $payload['latitude'];
-        $longitude = $payload['longitude'];
-
         $this->dbConnection->insert(self::TABLE_NAME, [
-            "locationName" => $locationName,
-            "latitude" => $latitude,
-            "longitude" => $longitude
+            "locationName" => $payload['locationName'],
+            "latitude" => $payload['latitude'],
+            "longitude" => $payload['longitude']
         ]);
     }
 
     public function updateLocation($payload, string $location): void
     {
-        $locationName = $payload['locationName'];
-        $latitude = $payload['latitude'];
-        $longitude = $payload['longitude'];
-
         $this->dbConnection->update(self::TABLE_NAME, [
-            "locationName" => $locationName,
-            "latitude" => $latitude,
-            "longitude" => $longitude
+            "locationName" => $payload['locationName'],
+            "latitude" => $payload['latitude'],
+            "longitude" => $payload['longitude']
         ], [
             "locationName" => ucfirst($location)
         ]);
@@ -58,6 +50,4 @@ class LocationModel
             "locationName" => $location
         ]);
     }
-
-
 }

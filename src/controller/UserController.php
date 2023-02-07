@@ -137,7 +137,7 @@ class UserController
         $this->authenticateRequest();
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            HttpHelper::setResponse(400, 'Invalid Or Missing Parameters', true);
+            HttpHelper::setResponse(400, 'Invalid Email', true);
             exit();
         }
 

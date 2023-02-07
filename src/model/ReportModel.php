@@ -15,7 +15,7 @@ class ReportModel
         $this->dbConnection = $dbConnection;
     }
 
-    public function getReportById(string $id): ?array
+    public function getReportById($id): ?array
     {
         return $this->dbConnection->select(self::TABLE_NAME, "*", ["reportId" => $id]);
     }
@@ -49,7 +49,7 @@ class ReportModel
 
     }
 
-    public function deleteReport(string $id): void
+    public function deleteReport($id): void
     {
         $this->dbConnection->delete(self::TABLE_NAME, [
             "reportId" => $id
