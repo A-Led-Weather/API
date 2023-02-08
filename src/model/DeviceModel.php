@@ -37,8 +37,8 @@ class DeviceModel
     public function updateDevice(string $id, $payload): void
     {
         $this->dbConnection->update(self::TABLE_NAME, [
-            "deviceUuid" => $payload['deviceUuid'],
-            "token" => $payload['token'],
+            "deviceUuid" => uniqid(),
+            "token" => bin2hex(random_bytes(32)),
             "model" => $payload['model'],
             "locationName" => $payload['locationName'],
         ], [

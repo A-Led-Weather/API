@@ -103,7 +103,7 @@ class DeviceController
 
         $payload = json_decode(file_get_contents("php://input"), true);
 
-        if (isset($payload['deviceUuid']) && isset($payload['token']) && isset($payload['model']) && isset($payload['locationName'])) {
+        if (isset($payload['model']) && isset($payload['locationName'])) {
             try {
                 $this->deviceModel->updateDevice($id, $payload);
                 HttpHelper::setResponse(201, "Device Updated", true);
