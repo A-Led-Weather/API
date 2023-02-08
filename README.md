@@ -38,17 +38,17 @@ But you can alternatively use php built-in server for a simple test and developm
 
 ## Dependencies
 
-- vlucas/phpdotenv : Dotenv is a library that loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.
+- vlucas/phpdotenv : Dotenv is a library that loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically
 - nikic/fast-route : Fast request router for PHP
-- firebase/php-jwt : A simple library to encode and decode JSON Web Tokens (JWT) in PHP.
-- catfan/medoo : Medoo is a lightweight PHP database framework to accelerate development.
+- firebase/php-jwt : A simple library to encode and decode JSON Web Tokens (JWT) in PHP
+- catfan/medoo : Medoo is a lightweight PHP database framework to accelerate development
 
 
 ## Usage
 
-First you need to create a user account by using addUser request, then create a token for your account with createToken request which returns a jwt to include in requiring requests headers.
+You need to create a user account using the API, then create a token for your account to include in your requests headers.
 
-Consult the API documentation to learn how to use the different routes and features : https://aled-weather.fr:8888/
+Consult the API documentation to learn how to use the different routes and features : https://www.aled-weather.fr:8888/
 
 ## Contribution
 
