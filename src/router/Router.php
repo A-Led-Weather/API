@@ -35,14 +35,12 @@ class Router
     private const OPTIONS_PRE_FLIGHT_CASE_1 = ['method' => 'OPTIONS', 'uri' => '/{any}', 'request' => 'options'];
     private const OPTIONS_PRE_FLIGHT_CASE_2 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}', 'request' => 'options'];
     private const OPTIONS_PRE_FLIGHT_CASE_3 = ['method' => 'OPTIONS', 'uri' => '/{any1}/{any2}/{any3}', 'request' => 'options'];
-
     private Dispatcher $dispatcher;
 
     public function __construct()
     {
         $this->dispatcher = $this->addRoute();
     }
-
 
     private function addRoute(): Dispatcher
     {

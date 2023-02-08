@@ -24,9 +24,8 @@ $dbPort = $_ENV['DB_PORT'];
 $jwtKey = $_ENV['JWT_KEY'];
 
 $headers = apache_request_headers();
-
-$requestMethod = $_SERVER["REQUEST_METHOD"];
 $route = $_SERVER["REQUEST_URI"];
+$requestMethod = $_SERVER["REQUEST_METHOD"];
 
 $dbConnector = new DbConnector($dbType, $dbHost, $dbPort, $dbName, $dbUser, $dbPassword);
 $dbConnection = $dbConnector->dbConnect();

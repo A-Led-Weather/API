@@ -9,7 +9,6 @@ use Model\UserModel;
 use Utility\AuthHelper;
 use Utility\HttpHelper;
 
-
 class ReportController
 {
 
@@ -19,9 +18,7 @@ class ReportController
     private ReportModel $reportModel;
     private UserModel $userModel;
     private string $jwtKey;
-
     private array $headers;
-
     private string|false $jwt;
 
     public function __construct(Medoo $dbConnection, string $jwtKey, array $headers)

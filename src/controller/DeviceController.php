@@ -14,9 +14,7 @@ class DeviceController
     private Medoo $dbConnection;
     private DeviceModel $deviceModel;
     private string $jwtKey;
-
     private array $headers;
-
     private string|false $jwt;
     private UserModel $userModel;
 
@@ -28,21 +26,6 @@ class DeviceController
         $this->jwtKey = $jwtKey;
         $this->headers = $headers;
         $this->jwt = HttpHelper::getAuthHeaderValue($this->headers);
-    }
-
-    private function authenticateRequest(): void
-    {
-        try {
-            AuthHelper::authenticateRequestToken($this->jwtKey, $this->jwt);
-        } catch (Exception $e) {
-            HttpHelper::setResponse(403, "Missing or Invalid Token", true);
-            exit;
-        }
-
-        if (empty($this->userModel->getEmailFromToken($this->jwt))) {
-            HttpHelper::setResponse(403, "Token Doesn't match any profile", true);
-            exit;
-        }
     }
 
     public function getDevices(): void
@@ -59,6 +42,21 @@ class DeviceController
             echo json_encode($results);
         } catch (Exception $e) {
             HttpHelper::setResponse(500, "Server Error", true);
+        }
+    }
+
+    private function authenticateRequest(): void
+    {
+        try {
+            AuthHelper::authenticateRequestToken($this->jwtKey, $this->jwt);
+        } catch (Exception $e) {
+            HttpHelper::setResponse(403, "Missing or Invalid Token", true);
+            exit;
+        }
+
+        if (empty($this->userModel->getEmailFromToken($this->jwt))) {
+            HttpHelper::setResponse(403, "Token Doesn't match any profile", true);
+            exit;
         }
     }
 

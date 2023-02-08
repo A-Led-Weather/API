@@ -15,9 +15,7 @@ class UserController
     private Medoo $dbConnection;
     private UserModel $userModel;
     private string $jwtKey;
-
     private array $headers;
-
     private string|false $jwt;
 
     public function __construct($dbConnection, $jwtKey, $headers)

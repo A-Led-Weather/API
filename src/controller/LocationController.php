@@ -11,7 +11,6 @@ use Utility\HttpHelper;
 class LocationController
 {
     private array $headers;
-
     private string|false $jwt;
     private Medoo $dbConnection;
     private string $jwtKey;
@@ -29,6 +28,7 @@ class LocationController
     public function getLocationByName(string $location): void
     {
         $this->authenticateRequest();
+
         try {
             $results = $this->locationModel->getLocationByName($location);
             if (empty($results)) {
@@ -42,9 +42,20 @@ class LocationController
         }
     }
 
+    private function authenticateRequest(): void
+    {
+        try {
+            AuthHelper::authenticateRequestToken($this->jwtKey, $this->jwt);
+        } catch (Exception $e) {
+            HttpHelper::setResponse(403, "Missing or Invalid Token", true);
+            exit;
+        }
+    }
+
     public function getLocations(): void
     {
         $this->authenticateRequest();
+
         try {
             $results = $this->locationModel->getLocations();
             if (empty($results)) {
@@ -58,21 +69,12 @@ class LocationController
         }
     }
 
-
-    private function authenticateRequest(): void
-    {
-        try {
-            AuthHelper::authenticateRequestToken($this->jwtKey, $this->jwt);
-        } catch (Exception $e) {
-            HttpHelper::setResponse(403, "Missing or Invalid Token", true);
-            exit;
-        }
-    }
-
     public function addLocation(): void
     {
-        $payload = json_decode(file_get_contents('php://input'), true);
         $this->authenticateRequest();
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
         if (isset($payload['locationName']) && isset ($payload['latitude']) && isset($payload['longitude'])) {
             try {
                 $this->locationModel->addLocation($payload);
@@ -84,10 +86,13 @@ class LocationController
             HttpHelper::setResponse(400, "Missing Data", true);
         }
     }
+
     public function updateLocation(string $location): void
     {
-        $payload = json_decode(file_get_contents('php://input'), true);
         $this->authenticateRequest();
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+
         if (isset($payload['locationName']) && isset ($payload['latitude']) && isset($payload['longitude'])) {
             try {
                 $this->locationModel->updateLocation($payload, $location);
@@ -103,6 +108,7 @@ class LocationController
     public function deleteLocation(string $location): void
     {
         $this->authenticateRequest();
+
         try {
             $this->locationModel->deleteLocation($location);
             HttpHelper::setResponse(200, "Success", true);
