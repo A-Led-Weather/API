@@ -28,7 +28,7 @@ class DeviceModel
     {
         $this->dbConnection->insert(self::TABLE_NAME, [
             "deviceUuid" => uniqid(),
-            "token" => bin2hex(random_bytes(16)),
+            "token" => bin2hex(random_bytes(32)),
             "model" => $payload['model'],
             "locationName" => $payload['locationName'],
         ]);
