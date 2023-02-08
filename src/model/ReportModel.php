@@ -25,9 +25,21 @@ class ReportModel
         return $this->dbConnection->select(self::TABLE_NAME, "*", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => 1]);
     }
 
-    public function getReportsByLocationByTimeRange(string $location, int $limit): ?array
+    public function getAverageReportByLocationByTimeRange(string $location, int $limit): ?array
     {
-        return $this->dbConnection->select(self::TABLE_NAME, "*", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => $limit]);
+        $temp = $this->dbConnection->avg(self::TABLE_NAME, "temperature", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => $limit]);
+        $hum = $this->dbConnection->avg(self::TABLE_NAME, "humidity", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => $limit]);
+        $period = $limit == 60 ? "hourly" : "daily";
+        $deviceUuid = $this->dbConnection->select(self::TABLE_NAME, "deviceUuid", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => 1]);
+        $locationName = $this->dbConnection->select(self::TABLE_NAME, "locationName", ["locationName" => ucfirst($location), "ORDER" => ["reportId" => "DESC"], "LIMIT" => 1]);
+
+        return [
+            "temperature" => round($temp, 2),
+            "humidity" => round($hum, 2),
+            "period" => $period,
+            "deviceUuid" => $deviceUuid[0],
+            "locationName" => $locationName[0]
+        ];
     }
 
     public function getLastsReports(): ?array

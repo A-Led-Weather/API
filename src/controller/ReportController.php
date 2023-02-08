@@ -153,7 +153,7 @@ class ReportController
         }
 
         try {
-            $results = $this->reportModel->getReportsByLocationByTimeRange($location, $limit);
+            $results = $this->reportModel->getAverageReportByLocationByTimeRange($location, $limit);
             if (empty($results)) {
                 HttpHelper::setResponse(404, "Location Not Found", true);
                 exit;
